@@ -1,5 +1,5 @@
-#!name=Bilibili 空降助手
-
+#!name=Bilibili空降助手
+#!desc=跳广告
 [Rule]
 DOMAIN,bsbsb.top,DIRECT
 

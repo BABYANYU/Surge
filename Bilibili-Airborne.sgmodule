@@ -1,0 +1,21 @@
+#!name=Bilibili 空降助手
+#!desc=仅保留 Sparkle 的 BilibiliSponsorBlock / 空降助手功能
+#!category=Enhancement
+#!arguments=空降助手策略:DIRECT,日志等级:5
+#!arguments-desc=空降助手策略: bsbsb.top 的分流策略，默认 DIRECT\n日志等级: 1 DEBUG / 2 INFO / 3 WARN / 4 ERROR / 5 OFF
+#
+# Based on kokoryh/Sparkle (GPL-3.0)
+# Upstream: https://github.com/kokoryh/Sparkle
+
+[Rule]
+DOMAIN,bsbsb.top,{{{空降助手策略}}}
+
+[Script]
+# 读取视频 cid/bvid，查询 bsbsb.top，并向分段弹幕注入 airborne 指令
+bilibili.airborne = type=http-request,pattern=^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.community\.service\.dm\.v1\.DM\/DmSegMobile$,argument="{"logLevel":"{{{日志等级}}}"}",requires-body=1,binary-body-mode=1,max-size=-1,engine=webview,timeout=10,script-path=https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.protobuf.request.js
+
+# 替换 ViewProgress 返回中的 Chronos 脚本，使 Bilibili 客户端识别 airborne 指令并执行跳转
+bilibili.airborne.chronos = type=http-response,pattern=^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.view(?:unite)?\.v1\.View\/ViewProgress$,argument="{"sponsorBlock":true,"logLevel":"{{{日志等级}}}"}",requires-body=1,binary-body-mode=1,max-size=-1,engine=webview,script-path=https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.protobuf.response.js
+
+[MITM]
+hostname = %APPEND% grpc.biliapi.net, app.bilibili.com

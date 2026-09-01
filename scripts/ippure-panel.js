@@ -30,7 +30,6 @@ $httpClient.get(request, (error, response, body) => {
   }
 
   const score = normalizeScore(data.fraudScore);
-  const risk = riskLevel(score);
   const location = compact([localCountry(data), localCity(data)]);
   const asn = data.asn ? `AS${data.asn}` : "未知";
   const fallbackOrganization = text(data.asOrganization, "未知");
@@ -43,7 +42,7 @@ $httpClient.get(request, (error, response, body) => {
         `IP：${data.ip}`,
         `位置：${location || "未知"}`,
         `ASN：${asn} · ${organization}`,
-        `风险：${score === null ? "未知" : `${score} · ${risk.label}`}`,
+        `风险：${score === null ? "未知" : score}`,
         `原生 IP：${nativeIp}`,
       ].join("\n\n");
 
@@ -106,14 +105,6 @@ function normalizeScore(value) {
   const score = Number(value);
   if (!Number.isFinite(score)) return null;
   return Math.max(0, Math.min(100, Math.round(score)));
-}
-
-function riskLevel(score) {
-  if (score === null) return { label: "未知", color: "#8E8E93" };
-  if (score <= 19) return { label: "低", color: "#30D158" };
-  if (score <= 59) return { label: "中等", color: "#FF9F0A" };
-  if (score <= 89) return { label: "高", color: "#FF453A" };
-  return { label: "极高", color: "#BF5AF2" };
 }
 
 function nativeLabel(isBroadcast) {

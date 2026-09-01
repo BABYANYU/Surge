@@ -14,10 +14,11 @@ async function main() {
   const request = await findPanelRequest();
   const policy = clean(request && request.policyName) || "当前策略";
   const entranceIP = extractProxyIP(request && request.remoteAddress);
+  const hasDistinctEntrance = entranceIP && !sameIP(entranceIP, landing.ip);
 
   let entrance = {};
 
-  if (entranceIP) {
+  if (hasDistinctEntrance) {
     entrance = await safeLookup(
       () =>
         getJSON(`https://api-v3.speedtest.cn/ip?ip=${encodeURIComponent(entranceIP)}`),
@@ -25,14 +26,18 @@ async function main() {
     );
   }
 
-  const lines = [
-    `入口 IP：${entranceIP || "未知"}`,
-    `位置：${formatLocation(entrance)}`,
-    `运营商：${formatOperator(entrance.operator)}`,
-  ];
+  const lines = [];
+
+  if (hasDistinctEntrance) {
+    lines.push(
+      `入口 IP：${entranceIP}`,
+      `位置：${formatLocation(entrance)}`,
+      `运营商：${formatOperator(entrance.operator)}`,
+      ""
+    );
+  }
 
   lines.push(
-    "",
     `落地 IP：${landing.ip}`,
     `位置：${formatLocation(landing)}`,
     `运营商：${formatOperator(landing.operator)}`
@@ -138,6 +143,14 @@ function extractProxyIP(value) {
   }
 
   return text;
+}
+
+function sameIP(left, right) {
+  return normalizeIP(left) === normalizeIP(right);
+}
+
+function normalizeIP(value) {
+  return clean(value).replace(/^\[|\]$/g, "").toLowerCase();
 }
 
 function formatLocation(info) {

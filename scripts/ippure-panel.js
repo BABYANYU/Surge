@@ -39,7 +39,7 @@ $httpClient.get(request, (error, response, body) => {
     lookupProvider(data.ip, fallbackOrganization, (provider) => {
       const organization = fitText(provider, 20);
       const content = [
-        `IP：${data.ip}`,
+        `检测IP：${data.ip}`,
         `ASN：${asn} · ${organization}`,
         `位置：${location || "未知"}`,
         `风险：${score === null ? "未知" : score}`,

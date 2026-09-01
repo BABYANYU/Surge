@@ -38,7 +38,7 @@ $httpClient.get(request, (error, response, body) => {
 
   lookupPolicy((policy) => {
     lookupProvider(data.ip, fallbackOrganization, (provider) => {
-      const organization = fitText(provider, 20);
+      const organization = fitText(shortProvider(provider), 14);
       const content = [
         `检测IP：${data.ip}`,
         `ASN：${asn} · ${organization}`,
@@ -174,6 +174,16 @@ function fitText(value, maxWidth) {
   }
 
   return output;
+}
+
+function shortProvider(value) {
+  const source = text(value, "未知");
+  const shortened = source
+    .replace(/,?\s+(incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?)$/i, "")
+    .replace(/\s+(cloud services?|internet services?|hosting services?|communications?|networks?)$/i, "")
+    .replace(/[,\s]+$/g, "")
+    .replace(/\s+/g, " ");
+  return shortened || source;
 }
 
 function compact(values) {

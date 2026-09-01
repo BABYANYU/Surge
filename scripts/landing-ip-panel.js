@@ -20,11 +20,7 @@ async function main() {
   let entrance = {};
 
   if (hasDistinctEntrance) {
-    entrance = await safeLookup(
-      () =>
-        getJSON(`https://api-v3.speedtest.cn/ip?ip=${encodeURIComponent(entranceIP)}`),
-      parseSpeedtest
-    );
+    entrance = await lookupEntrance(entranceIP).catch(() => ({}));
   }
 
   const lines = [];
@@ -94,11 +90,17 @@ function findPanelRequest() {
   });
 }
 
-async function safeLookup(request, parser) {
+async function lookupEntrance(ip) {
+  const encodedIP = encodeURIComponent(ip);
+
   try {
-    return parser(await request());
+    return parseEntranceIPWho(
+      await getJSON(`https://ipwho.is/${encodedIP}?lang=zh-CN&surge_panel=${Date.now()}`)
+    );
   } catch (_) {
-    return {};
+    return parseIPSB(
+      await getJSON(`https://api.ip.sb/geoip/${encodedIP}?surge_panel=${Date.now()}`)
+    );
   }
 }
 
@@ -117,18 +119,37 @@ function parseIPWho(data) {
   };
 }
 
-function parseSpeedtest(result) {
-  const data = result && result.data;
-  if (!data || result.code !== 0) {
+function parseEntranceIPWho(data) {
+  if (!data || data.success === false || !data.ip) {
+    throw new Error("无法获取入口信息");
+  }
+
+  const connection = data.connection || {};
+  const organization = clean(connection.org);
+  const isp = clean(connection.isp);
+
+  return {
+    countryCode: data.country_code,
+    country: data.country,
+    region: data.region,
+    city: data.city,
+    operator: /^(private customer|unknown|n\/a)$/i.test(organization)
+      ? isp
+      : organization || isp,
+  };
+}
+
+function parseIPSB(data) {
+  if (!data || !data.ip) {
     throw new Error("无法获取入口信息");
   }
 
   return {
-    countryCode: data.countryCode,
+    countryCode: data.country_code,
     country: data.country,
-    region: data.province,
+    region: data.region,
     city: data.city,
-    operator: data.operator || data.isp,
+    operator: data.organization || data.isp || data.asn_organization,
   };
 }
 
@@ -161,6 +182,7 @@ function formatLocation(info) {
   const city = trimPlaceSuffix(info && info.city);
 
   if (["HK", "MO", "TW"].includes(code)) return country || "未知";
+  if (code === "CN" && ["北京", "上海", "天津", "重庆"].includes(region)) return region;
 
   const values = code === "CN" ? unique([region, city]) : unique([country, region, city]);
   return fitText(values.join(" ") || country || "未知", 24);
@@ -170,6 +192,13 @@ function formatOperator(value) {
   const source = clean(value);
   const lower = source.toLowerCase();
 
+  if (/huawei cloud|hwcsnet/.test(lower)) return "Huawei Cloud";
+  if (/ucloud/.test(lower)) return "UCloud";
+  if (/alibaba cloud|aliyun/.test(lower)) return "Alibaba Cloud";
+  if (/tencent cloud|qcloud/.test(lower)) return "Tencent Cloud";
+  if (/amazon|\baws\b/.test(lower)) return "AWS";
+  if (/google cloud|google llc/.test(lower)) return "Google Cloud";
+  if (/microsoft|azure/.test(lower)) return "Microsoft Azure";
   if (/chinanet|china telecom|中国电信/.test(lower)) return "中国电信";
   if (/china unicom|unicom|中国联通/.test(lower)) return "中国联通";
   if (/china mobile|cmcc|中国移动/.test(lower)) return "中国移动";

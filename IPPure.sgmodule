@@ -3,7 +3,7 @@
 #!system=ios
 
 [Panel]
-IPPure = title="IPPure",content="点击刷新获取当前出口 IP",icon=network,icon-color=#64D2FF,script-name=ippure-panel-v11,update-interval=-1
+IPPure = title="IPPure",content="点击刷新获取当前出口 IP",icon=network,icon-color=#64D2FF,script-name=ippure-panel-v12,update-interval=-1
 
 [Script]
-ippure-panel-v11 = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/db5aefc/scripts/ippure-panel.js,timeout=15,script-update-interval=3600
+ippure-panel-v12 = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/ippure-panel-v12.js,timeout=15,script-update-interval=3600

@@ -33,24 +33,51 @@ $httpClient.get(request, (error, response, body) => {
   const risk = riskLevel(score);
   const location = compact([localCountry(data), localCity(data)]);
   const asn = data.asn ? `AS${data.asn}` : "未知";
-  const organization = fitText(text(data.asOrganization, "未知"), 20);
+  const fallbackOrganization = text(data.asOrganization, "未知");
   const nativeIp = nativeLabel(data.isBroadcast);
 
-  const content = [
-    `IP：${data.ip}`,
-    `位置：${location || "未知"}`,
-    `ASN：${asn} · ${organization}`,
-    `风险：${score === null ? "未知" : `${score} · ${risk.label}`}`,
-    `原生 IP：${nativeIp}`,
-  ].join("\n\n");
+  lookupProvider(data.ip, fallbackOrganization, (provider) => {
+    const organization = fitText(provider, 20);
+    const content = [
+      `IP：${data.ip}`,
+      `位置：${location || "未知"}`,
+      `ASN：${asn} · ${organization}`,
+      `风险：${score === null ? "未知" : `${score} · ${risk.label}`}`,
+      `原生 IP：${nativeIp}`,
+    ].join("\n\n");
 
-  $done({
-    title: "IPPure",
-    content,
-    icon: "network",
-    "icon-color": "#64D2FF",
+    $done({
+      title: "IPPure",
+      content,
+      icon: "network",
+      "icon-color": "#64D2FF",
+    });
   });
 });
+
+function lookupProvider(ip, fallback, done) {
+  $httpClient.get(
+    {
+      url: `https://ipwho.is/${encodeURIComponent(ip)}?lang=zh-CN`,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "Surge IPPure Panel/1.0",
+      },
+    },
+    (error, response, body) => {
+      const status = Number(response && (response.status || response.statusCode));
+      if (error || (status && (status < 200 || status >= 300))) return done(fallback);
+
+      try {
+        const data = JSON.parse(body);
+        const connection = data && data.connection;
+        done(text(connection && (connection.isp || connection.org), fallback));
+      } catch (_) {
+        done(fallback);
+      }
+    }
+  );
+}
 
 function renderError(message) {
   $done({

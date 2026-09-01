@@ -1,3 +1,4 @@
+// Route panel
 const PANEL = {
   icon: "globe.asia.australia",
   color: "#6699FF",

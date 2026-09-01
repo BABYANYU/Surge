@@ -1,3 +1,4 @@
+// IPPure panel
 const API_URL = "https://my.ippure.com/v1/info";
 
 const request = {

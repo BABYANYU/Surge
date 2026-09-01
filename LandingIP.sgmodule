@@ -6,4 +6,4 @@
 代理链信息 = title="代理链信息",content="点击刷新查询代理链信息",icon=globe.asia.australia,icon-color=#6699FF,script-name=proxy-chain-panel,update-interval=-1
 
 [Script]
-proxy-chain-panel = type=generic,timeout=15,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/landing-ip-panel.js?v=10,script-update-interval=3600
+proxy-chain-panel = type=generic,timeout=15,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/landing-ip-panel.js,script-update-interval=1

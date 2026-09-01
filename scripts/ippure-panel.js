@@ -44,7 +44,7 @@ $httpClient.get(request, (error, response, body) => {
         `位置：${location || "未知"}`,
         `风险：${score === null ? "未知" : score}`,
         `原生：${nativeIp}`,
-      ].join("\n\n");
+      ].join("\n");
 
       $done({
         title: policy ? `IPPure：${fitText(policy, 24)}` : "IPPure",

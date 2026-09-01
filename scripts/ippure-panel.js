@@ -42,13 +42,13 @@ $httpClient.get(request, (error, response, body) => {
     `ASN：${asn} · ${organization}`,
     `风险：${score === null ? "未知" : `${score} / 100 · ${risk.label}`}`,
     `原生 IP：${nativeIp}`,
-  ].join("\n");
+  ].join("\n\n");
 
   $done({
     title: "IPPure · IP 纯净度",
     content,
-    icon: "network.badge.shield.half.filled",
-    "icon-color": risk.color,
+    icon: "network",
+    "icon-color": "#64D2FF",
   });
 });
 

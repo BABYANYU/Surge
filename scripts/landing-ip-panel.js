@@ -3,7 +3,7 @@ const PANEL = {
   color: "#6699FF",
 };
 
-const LOOKUP_URL = `https://ipwho.is/?surge_panel=${Date.now()}`;
+const LOOKUP_URL = `https://ipwho.is/?lang=zh-CN&surge_panel=${Date.now()}`;
 
 main().catch((error) => {
   finishError(error && error.message ? error.message : "查询失败");
@@ -19,7 +19,7 @@ async function main() {
 
   if (entranceIP) {
     entrance = await safeLookup(
-      () => getJSON(`https://ipwho.is/${encodeURIComponent(entranceIP)}`),
+      () => getJSON(`https://ipwho.is/${encodeURIComponent(entranceIP)}?lang=zh-CN`),
       parseIPWho
     );
   }
@@ -27,18 +27,18 @@ async function main() {
   const lines = [
     `入口 IP：${entranceIP || "未知"}`,
     `位置：${formatLocation(entrance)}`,
-    `运营商：${clean(entrance.operator) || "未知"}`,
+    `运营商：${formatOperator(entrance.operator)}`,
   ];
 
   lines.push(
     "",
     `落地 IP：${landing.ip}`,
     `位置：${formatLocation(landing)}`,
-    `运营商：${clean(landing.operator) || "未知"}`
+    `运营商：${formatOperator(landing.operator)}`
   );
 
   $done({
-    title: `代理策略：${policy}`,
+    title: `代理策略：${fitText(policy, 24)}`,
     content: lines.join("\n"),
     icon: PANEL.icon,
     "icon-color": PANEL.color,
@@ -125,12 +125,52 @@ function extractProxyIP(value) {
 }
 
 function formatLocation(info) {
-  const values = unique([
-    countryName(info && info.countryCode, info && info.country),
-    info && info.region,
-    info && info.city,
-  ]);
-  return values.length ? values.join(" ") : "未知";
+  const code = String((info && info.countryCode) || "").toUpperCase();
+  const country = countryName(code, info && info.country);
+  const region = trimPlaceSuffix(info && info.region);
+  const city = trimPlaceSuffix(info && info.city);
+
+  if (["HK", "MO", "TW"].includes(code)) return country || "未知";
+
+  const values = code === "CN" ? unique([region, city]) : unique([country, region, city]);
+  return fitText(values.join(" ") || country || "未知", 24);
+}
+
+function formatOperator(value) {
+  const source = clean(value);
+  const lower = source.toLowerCase();
+
+  if (/chinanet|china telecom|中国电信/.test(lower)) return "中国电信";
+  if (/china unicom|unicom|中国联通/.test(lower)) return "中国联通";
+  if (/china mobile|cmcc|中国移动/.test(lower)) return "中国移动";
+  if (/china broadnet|中国广电/.test(lower)) return "中国广电";
+  if (/misaka network/.test(lower)) return "Misaka Network";
+
+  const shortened = source
+    .replace(/,?\s+(incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?)$/i, "")
+    .replace(/\s+/g, " ");
+  return fitText(shortened || "未知", 22);
+}
+
+function trimPlaceSuffix(value) {
+  return clean(value)
+    .replace(/\s+(Sheng|Shi|Zizhiqu|Tequ)$/i, "")
+    .replace(/(特别行政区|壮族自治区|回族自治区|维吾尔自治区|自治区|省|市)$/u, "");
+}
+
+function fitText(value, maxWidth) {
+  const input = clean(value);
+  let output = "";
+  let width = 0;
+
+  for (const character of input) {
+    const nextWidth = /[^\x00-\xff]/.test(character) ? 2 : 1;
+    if (width + nextWidth > maxWidth) return `${output.trim()}…`;
+    output += character;
+    width += nextWidth;
+  }
+
+  return output || "未知";
 }
 
 function countryName(code, fallback) {

@@ -19,8 +19,9 @@ async function main() {
 
   if (entranceIP) {
     entrance = await safeLookup(
-      () => getJSON(`https://ipwho.is/${encodeURIComponent(entranceIP)}?lang=zh-CN`),
-      parseIPWho
+      () =>
+        getJSON(`https://api-v3.speedtest.cn/ip?ip=${encodeURIComponent(entranceIP)}`),
+      parseSpeedtest
     );
   }
 
@@ -107,6 +108,21 @@ function parseIPWho(data) {
     region: data.region,
     city: data.city,
     operator: data.connection && (data.connection.isp || data.connection.org),
+  };
+}
+
+function parseSpeedtest(result) {
+  const data = result && result.data;
+  if (!data || result.code !== 0) {
+    throw new Error("无法获取入口信息");
+  }
+
+  return {
+    countryCode: data.countryCode,
+    country: data.country,
+    region: data.province,
+    city: data.city,
+    operator: data.operator || data.isp,
   };
 }
 

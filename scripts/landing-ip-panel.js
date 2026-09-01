@@ -174,12 +174,18 @@ function formatOperator(value) {
   if (/china unicom|unicom|中国联通/.test(lower)) return "中国联通";
   if (/china mobile|cmcc|中国移动/.test(lower)) return "中国移动";
   if (/china broadnet|中国广电/.test(lower)) return "中国广电";
-  if (/misaka network/.test(lower)) return "Misaka Network";
 
+  return fitText(shortProvider(source), 18);
+}
+
+function shortProvider(value) {
+  const source = clean(value);
   const shortened = source
-    .replace(/,?\s+(incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?)$/i, "")
+    .replace(/,?\s+(incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?)$/i, "")
+    .replace(/\s+(cloud services?|internet services?|hosting services?|communications?|networks?)$/i, "")
+    .replace(/[,\s]+$/g, "")
     .replace(/\s+/g, " ");
-  return fitText(shortened || "未知", 22);
+  return shortened || source || "未知";
 }
 
 function trimPlaceSuffix(value) {

@@ -36,24 +36,38 @@ $httpClient.get(request, (error, response, body) => {
   const fallbackOrganization = text(data.asOrganization, "未知");
   const nativeIp = nativeLabel(data.isBroadcast);
 
-  lookupProvider(data.ip, fallbackOrganization, (provider) => {
-    const organization = fitText(provider, 20);
-    const content = [
-      `IP：${data.ip}`,
-      `位置：${location || "未知"}`,
-      `ASN：${asn} · ${organization}`,
-      `风险：${score === null ? "未知" : `${score} · ${risk.label}`}`,
-      `原生 IP：${nativeIp}`,
-    ].join("\n\n");
+  lookupPolicy((policy) => {
+    lookupProvider(data.ip, fallbackOrganization, (provider) => {
+      const organization = fitText(provider, 20);
+      const content = [
+        `IP：${data.ip}`,
+        `位置：${location || "未知"}`,
+        `ASN：${asn} · ${organization}`,
+        `风险：${score === null ? "未知" : `${score} · ${risk.label}`}`,
+        `原生 IP：${nativeIp}`,
+      ].join("\n\n");
 
-    $done({
-      title: "IPPure",
-      content,
-      icon: "network",
-      "icon-color": "#64D2FF",
+      $done({
+        title: policy ? `IPPure：${fitText(policy, 24)}` : "IPPure",
+        content,
+        icon: "network",
+        "icon-color": "#64D2FF",
+      });
     });
   });
 });
+
+function lookupPolicy(done) {
+  if (typeof $httpAPI === "undefined") return done("");
+
+  $httpAPI("GET", "/v1/requests/recent", null, (result) => {
+    const requests = result && Array.isArray(result.requests) ? result.requests : [];
+    const request = requests
+      .slice(0, 20)
+      .find((item) => /my\.ippure\.com/i.test(String(item && item.URL)));
+    done(text(request && request.policyName, ""));
+  });
+}
 
 function lookupProvider(ip, fallback, done) {
   $httpClient.get(

@@ -31,21 +31,21 @@ $httpClient.get(request, (error, response, body) => {
 
   const score = normalizeScore(data.fraudScore);
   const risk = riskLevel(score);
-  const location = compact([localCountry(data), data.city]);
+  const location = compact([localCountry(data), localCity(data)]);
   const asn = data.asn ? `AS${data.asn}` : "未知";
-  const organization = text(data.asOrganization, "未知");
+  const organization = fitText(text(data.asOrganization, "未知"), 20);
   const nativeIp = nativeLabel(data.isBroadcast);
 
   const content = [
     `IP：${data.ip}`,
     `位置：${location || "未知"}`,
     `ASN：${asn} · ${organization}`,
-    `风险：${score === null ? "未知" : `${score} / 100 · ${risk.label}`}`,
+    `风险：${score === null ? "未知" : `${score} · ${risk.label}`}`,
     `原生 IP：${nativeIp}`,
   ].join("\n\n");
 
   $done({
-    title: "IPPure · IP 纯净度",
+    title: "IPPure",
     content,
     icon: "network",
     "icon-color": "#64D2FF",
@@ -54,7 +54,7 @@ $httpClient.get(request, (error, response, body) => {
 
 function renderError(message) {
   $done({
-    title: "IPPure · 查询失败",
+    title: "IPPure",
     content: `${message}\n请稍后点击面板重试`,
     icon: "exclamationmark.shield.fill",
     "icon-color": "#FF453A",
@@ -101,13 +101,55 @@ function localCountry(data) {
   return names[code] || text(data.country, code || "未知");
 }
 
+function localCity(data) {
+  const city = text(data.city, "");
+  if (!city) return "";
+  if (/[^\x00-\xff]/.test(city)) return city.replace(/市$/u, "");
+
+  const names = {
+    "kwai chung": "葵涌",
+    "hong kong": "",
+    central: "中环",
+    kowloon: "九龙",
+    "tsuen wan": "荃湾",
+    "sha tin": "沙田",
+    singapore: "",
+    tokyo: "东京",
+    osaka: "大阪",
+    seoul: "首尔",
+    taipei: "台北",
+    london: "伦敦",
+    frankfurt: "法兰克福",
+    paris: "巴黎",
+    "los angeles": "洛杉矶",
+    "san jose": "圣何塞",
+    "new york": "纽约",
+  };
+  return names[city.toLowerCase()] || "";
+}
+
+function fitText(value, maxWidth) {
+  const input = text(value, "未知");
+  let output = "";
+  let width = 0;
+
+  for (const character of input) {
+    const nextWidth = /[^\x00-\xff]/.test(character) ? 2 : 1;
+    if (width + nextWidth > maxWidth) return `${output.trim()}…`;
+    output += character;
+    width += nextWidth;
+  }
+
+  return output;
+}
+
 function compact(values) {
   const result = [];
   values.forEach((value) => {
     const item = String(value || "").trim();
     if (item && !result.includes(item)) result.push(item);
   });
-  return result.join(" · ");
+  return result.join(" ");
 }
 
 function text(value, fallback) {

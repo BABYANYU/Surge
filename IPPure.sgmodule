@@ -1,9 +1,9 @@
-#!name=IPPure IP 纯净度
+#!name=IPPure
 #!desc=使用 IPPure 查询当前 Surge 出口 IP、位置、ASN、风险分及原生 IP 状态
 #!system=ios
 
 [Panel]
-IPPure = title="IPPure · IP 纯净度",content="点击刷新获取当前出口 IP",icon=network,icon-color=#64D2FF,script-name=ippure-panel,update-interval=300
+IPPure = title="IPPure",content="点击刷新获取当前出口 IP",icon=network,icon-color=#64D2FF,script-name=ippure-panel,update-interval=300
 
 [Script]
-ippure-panel = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/ippure-panel.js,timeout=10,script-update-interval=3600
+ippure-panel = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/ippure-panel.js?v=2,timeout=10,script-update-interval=3600

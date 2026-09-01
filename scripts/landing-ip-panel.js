@@ -31,16 +31,16 @@ async function main() {
   if (hasDistinctEntrance) {
     lines.push(
       `入口 IP：${entranceIP}`,
-      `位置：${formatLocation(entrance)}`,
       `运营商：${formatOperator(entrance.operator)}`,
+      `位置：${formatLocation(entrance)}`,
       ""
     );
   }
 
   lines.push(
     `落地 IP：${landing.ip}`,
-    `位置：${formatLocation(landing)}`,
-    `运营商：${formatOperator(landing.operator)}`
+    `运营商：${formatOperator(landing.operator)}`,
+    `位置：${formatLocation(landing)}`
   );
 
   $done({

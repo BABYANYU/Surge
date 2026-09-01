@@ -40,8 +40,8 @@ $httpClient.get(request, (error, response, body) => {
       const organization = fitText(provider, 20);
       const content = [
         `IP：${data.ip}`,
-        `位置：${location || "未知"}`,
         `ASN：${asn} · ${organization}`,
+        `位置：${location || "未知"}`,
         `风险：${score === null ? "未知" : score}`,
         `原生 IP：${nativeIp}`,
       ].join("\n\n");

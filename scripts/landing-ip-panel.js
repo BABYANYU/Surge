@@ -44,7 +44,7 @@ async function main() {
   );
 
   $done({
-    title: `代理策略：${fitText(policy, 24)}`,
+    title: `Route：${fitText(policy, 24)}`,
     content: lines.join("\n"),
     icon: PANEL.icon,
     "icon-color": PANEL.color,

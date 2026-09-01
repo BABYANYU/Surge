@@ -43,7 +43,7 @@ $httpClient.get(request, (error, response, body) => {
         `ASN：${asn} · ${organization}`,
         `位置：${location || "未知"}`,
         `风险：${score === null ? "未知" : score}`,
-        `原生 IP：${nativeIp}`,
+        `原生：${nativeIp}`,
       ].join("\n\n");
 
       $done({

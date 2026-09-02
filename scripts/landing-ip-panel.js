@@ -199,6 +199,7 @@ function formatOperator(value) {
   if (/amazon|\baws\b/.test(lower)) return "AWS";
   if (/google cloud|google llc/.test(lower)) return "Google Cloud";
   if (/microsoft|azure/.test(lower)) return "Microsoft Azure";
+  if (/eons data communications|\bedcl\b/.test(lower)) return "Eons Data";
   if (/chinanet|china telecom|中国电信/.test(lower)) return "中国电信";
   if (/china unicom|unicom|中国联通/.test(lower)) return "中国联通";
   if (/china mobile|cmcc|中国移动/.test(lower)) return "中国移动";
@@ -211,6 +212,7 @@ function shortProvider(value) {
   const source = String(value || "").trim();
   const shortened = source
     .replace(/(?:,?\s+(?:incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?))+$/i, "")
+    .replace(/\s+communications?$/i, "")
     .replace(/[,\s]+$/g, "")
     .replace(/\s+/g, " ");
   return shortened || source || "未知";

@@ -38,10 +38,10 @@ $httpClient.get(request, (error, response, body) => {
 
   lookupPolicy((policy) => {
     lookupProvider(data.ip, fallbackOrganization, (provider) => {
-      const organization = fitText(shortProvider(provider), 14);
       const content = [
         `检测IP：${data.ip}`,
-        `ASN：${asn} · ${organization}`,
+        `ASN：${asn}`,
+        `运营商：${formatOperator(provider)}`,
         `位置：${location || "未知"}`,
         `风险：${score === null ? "未知" : score}`,
         `原生：${nativeIp}`,
@@ -176,14 +176,32 @@ function fitText(value, maxWidth) {
   return output;
 }
 
+function formatOperator(value) {
+  const source = String(value || "").trim();
+  const lower = source.toLowerCase();
+
+  if (/huawei cloud|hwcsnet/.test(lower)) return "Huawei Cloud";
+  if (/ucloud/.test(lower)) return "UCloud";
+  if (/alibaba cloud|aliyun/.test(lower)) return "Alibaba Cloud";
+  if (/tencent cloud|qcloud/.test(lower)) return "Tencent Cloud";
+  if (/amazon|\baws\b/.test(lower)) return "AWS";
+  if (/google cloud|google llc/.test(lower)) return "Google Cloud";
+  if (/microsoft|azure/.test(lower)) return "Microsoft Azure";
+  if (/chinanet|china telecom|中国电信/.test(lower)) return "中国电信";
+  if (/china unicom|unicom|中国联通/.test(lower)) return "中国联通";
+  if (/china mobile|cmcc|中国移动/.test(lower)) return "中国移动";
+  if (/china broadnet|中国广电/.test(lower)) return "中国广电";
+
+  return fitText(shortProvider(source), 18);
+}
+
 function shortProvider(value) {
-  const source = text(value, "未知");
+  const source = String(value || "").trim();
   const shortened = source
-    .replace(/,?\s+(incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?)$/i, "")
-    .replace(/\s+(cloud services?|internet services?|hosting services?|communications?|networks?)$/i, "")
+    .replace(/(?:,?\s+(?:incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?))+$/i, "")
     .replace(/[,\s]+$/g, "")
     .replace(/\s+/g, " ");
-  return shortened || source;
+  return shortened || source || "未知";
 }
 
 function compact(values) {

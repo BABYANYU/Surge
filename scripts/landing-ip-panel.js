@@ -208,10 +208,9 @@ function formatOperator(value) {
 }
 
 function shortProvider(value) {
-  const source = clean(value);
+  const source = String(value || "").trim();
   const shortened = source
-    .replace(/,?\s+(incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?)$/i, "")
-    .replace(/\s+(cloud services?|internet services?|hosting services?|communications?|networks?)$/i, "")
+    .replace(/(?:,?\s+(?:incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?))+$/i, "")
     .replace(/[,\s]+$/g, "")
     .replace(/\s+/g, " ");
   return shortened || source || "未知";

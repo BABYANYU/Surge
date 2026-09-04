@@ -177,35 +177,75 @@ function fitText(value, maxWidth) {
 }
 
 function formatOperator(value) {
-  const source = String(value || "").trim();
+  const source = normalizeProvider(value);
   const lower = source.toLowerCase();
 
-  if (/huawei cloud|hwcsnet/.test(lower)) return "Huawei Cloud";
+  if (/huawei|hwcsnet/.test(lower)) return "Huawei Cloud";
   if (/ucloud/.test(lower)) return "UCloud";
   if (/alibaba cloud|aliyun/.test(lower)) return "Alibaba Cloud";
   if (/tencent cloud|qcloud/.test(lower)) return "Tencent Cloud";
   if (/amazon|\baws\b/.test(lower)) return "AWS";
   if (/google cloud|google llc/.test(lower)) return "Google Cloud";
   if (/microsoft|azure/.test(lower)) return "Microsoft Azure";
-  if (/\bdmit\b/.test(lower)) return "DMIT";
+  if (/\bdmit\b/.test(lower)) return "DMIT Cloud";
   if (/eons data communications|\bedcl\b/.test(lower)) return "Eons Data";
   if (/chinanet|china telecom|中国电信/.test(lower)) return "中国电信";
   if (/china unicom|unicom|中国联通/.test(lower)) return "中国联通";
   if (/china mobile|cmcc|中国移动/.test(lower)) return "中国移动";
   if (/china broadnet|中国广电/.test(lower)) return "中国广电";
 
-  return fitText(shortProvider(source), 18);
+  return compactProvider(source, 18);
 }
 
-function shortProvider(value) {
-  const source = String(value || "").trim();
-  const shortened = source
-    .replace(/(?:,?\s+(?:incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?))+$/i, "")
-    .replace(/\s+(?:cloud|hosting|internet)\s+services?$/i, "")
-    .replace(/\s+communications?$/i, "")
-    .replace(/[,\s]+$/g, "")
-    .replace(/\s+/g, " ");
-  return shortened || source || "未知";
+function compactProvider(value, maxWidth) {
+  const source = normalizeProvider(value) || "未知";
+  if (displayWidth(source) <= maxWidth) return source;
+
+  let candidate = normalizeProvider(
+    source.replace(
+      /(?:,?\s+(?:incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?))+$/i,
+      ""
+    )
+  );
+  if (candidate && displayWidth(candidate) <= maxWidth) return candidate;
+
+  const trailingNoise = /\s+(?:services?|communications?|technolog(?:y|ies)|networks?|telecommunications?|telecom|hosting|internet|cloud|electron(?:ic)?|solutions?|systems?|groups?|holdings?|international|global|providers?)$/i;
+  while (candidate) {
+    const shorter = normalizeProvider(candidate.replace(trailingNoise, ""));
+    if (!shorter || shorter === candidate) break;
+    candidate = shorter;
+    if (displayWidth(candidate) <= maxWidth) return candidate;
+  }
+
+  return fitProviderWords(candidate || source, maxWidth);
+}
+
+function fitProviderWords(value, maxWidth) {
+  const words = normalizeProvider(value).split(" ").filter(Boolean);
+  let output = "";
+
+  for (const word of words) {
+    const next = output ? `${output} ${word}` : word;
+    if (displayWidth(next) > maxWidth) break;
+    output = next;
+  }
+
+  return output || fitText(words[0] || "未知", maxWidth);
+}
+
+function normalizeProvider(value) {
+  return String(value || "")
+    .replace(/[()[\]]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function displayWidth(value) {
+  let width = 0;
+  for (const character of String(value || "")) {
+    width += /[^\x00-\xff]/.test(character) ? 2 : 1;
+  }
+  return width;
 }
 
 function compact(values) {

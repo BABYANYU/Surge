@@ -1,5 +1,7 @@
 # Surge
 
+项目维护与跨设备交接说明：[PROJECT_CONTEXT.md](./PROJECT_CONTEXT.md)
+
 ## IPPure IP 纯净度
 
 在 Surge 信息面板中查询当前出口 IP，展示位置、ASN、风险分和原生 IP 状态。数据来自 [IPPure](https://ippure.com/)。

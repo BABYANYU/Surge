@@ -23,6 +23,18 @@ https://raw.githubusercontent.com/BABYANYU/Surge/main/IPPure.sgmodule
 
 - [Bilibili 空降助手](./Bilibili空降助手.sgmodule)
 
+## 115 分享跳转
+
+打开 `115.com` 或 `115cdn.com` 的分享链接时，自动跳转到 115 客户端，并保留链接中的分享码及访问码参数。
+
+[一键安装 115 分享跳转模块](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Fmain%2F115Share.sgmodule)
+
+模块地址：
+
+```text
+https://raw.githubusercontent.com/BABYANYU/Surge/main/115Share.sgmodule
+```
+
 ## 喜马拉雅
 
 将上游圈 X 脚本适配为 Surge 模块。远程脚本关闭自动更新，仅在 Surge 中手动刷新外部资源时检查更新。

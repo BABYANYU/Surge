@@ -1,4 +1,4 @@
-const ICON = "alarm";
+const ICON = "clock";
 const COLOR = "#6699FF";
 
 try {

@@ -1,4 +1,4 @@
-const ICON = "clock.arrow.2.circlepath";
+const ICON = "alarm";
 const COLOR = "#6699FF";
 
 try {

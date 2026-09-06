@@ -1,4 +1,4 @@
-const ICON = "clock";
+const ICON = "stopwatch";
 const COLOR = "#6699FF";
 
 try {

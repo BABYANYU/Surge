@@ -5,7 +5,7 @@
 #!arguments-desc=HH 为小时（00–23），MM 为分钟（00–59）。Policy 可填节点、子策略组或 DIRECT，名称必须与 Surge 完全一致。
 
 [Panel]
-Cron = title="Cron",content="点击刷新查看定时切换状态",icon=clock,icon-color=#6699FF,script-name=cron-policy-panel,update-interval=-1
+Cron = title="Cron",content="点击刷新查看定时切换状态",icon=stopwatch,icon-color=#6699FF,script-name=cron-policy-panel,update-interval=-1
 
 [Script]
 cron-policy-a = type=cron,cronexp="{{{A_Start_MM}}} {{{A_Start_HH}}} * * *",wake-system=true,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/cron-policy.js,script-update-interval=1,argument="{{{Group}}}§{{{A_Start_HH}}}§{{{A_Start_MM}}}§{{{A_Policy}}}§{{{B_Start_HH}}}§{{{B_Start_MM}}}§{{{B_Policy}}}"

@@ -23,6 +23,18 @@ https://raw.githubusercontent.com/BABYANYU/Surge/main/IPPure.sgmodule
 
 - [Bilibili 空降助手](./Bilibili空降助手.sgmodule)
 
+## 喜马拉雅
+
+将上游圈 X 脚本适配为 Surge 模块，远程脚本每天自动检查更新。
+
+[一键安装喜马拉雅模块](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Fmain%2FXimalaya.sgmodule)
+
+模块地址：
+
+```text
+https://raw.githubusercontent.com/BABYANYU/Surge/main/Ximalaya.sgmodule
+```
+
 ## Cron 定时切换
 
 通过 Surge 模块参数设置两个时段，定时切换指定 `select` 策略组的节点或子策略组。

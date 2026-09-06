@@ -51,7 +51,7 @@ $httpClient.get(request, (error, response, body) => {
         title: policy ? `IPPure：${fitText(policy, 24)}` : "IPPure",
         content,
         icon: "network",
-        "icon-color": "#64D2FF",
+        "icon-color": "#6699FF",
       });
     });
   });

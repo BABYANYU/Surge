@@ -1,5 +1,5 @@
 const ICON = "clock.arrow.2.circlepath";
-const COLOR = "#64D2FF";
+const COLOR = "#6699FF";
 
 try {
   const config = parseConfig(typeof $argument === "undefined" ? "" : $argument);

@@ -81,18 +81,14 @@ function synchronize(config) {
 }
 
 function renderPanel(config) {
-  const details = getGroupDetails(config);
-  const state = getTimeState(config, new Date());
-  const current = clean(details.decisions && details.decisions[config.group]) || "未知";
+  getGroupDetails(config);
 
   $done({
     title: `Cron · ${fitText(config.group, 18)}`,
     content: [
       `${formatTime(config.aHour, config.aMinute)}–${formatTime(config.bHour, config.bMinute)}  ${fitText(config.aPolicy, 18)}`,
-      `${formatTime(config.bHour, config.bMinute)}–${formatTime(config.aHour, config.aMinute)}  ${fitText(config.bPolicy, 18)}`,
       "",
-      `Now:  ${fitText(current, 18)}`,
-      `Next: ${state.nextTime} → ${fitText(state.nextPolicy, 14)}`,
+      `${formatTime(config.bHour, config.bMinute)}–${formatTime(config.aHour, config.aMinute)}  ${fitText(config.bPolicy, 18)}`,
     ].join("\n"),
     icon: ICON,
     "icon-color": COLOR,

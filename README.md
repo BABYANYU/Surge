@@ -23,6 +23,18 @@ https://raw.githubusercontent.com/BABYANYU/Surge/main/IPPure.sgmodule
 
 - [Bilibili 空降助手](./Bilibili空降助手.sgmodule)
 
+## 爱奇艺去广告
+
+移除爱奇艺开屏、焦点图、瀑布流和搜索广告，关闭部分弹窗并精简页面。
+
+[一键安装爱奇艺去广告模块](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Fmain%2FiQiYi.sgmodule)
+
+模块地址：
+
+```text
+https://raw.githubusercontent.com/BABYANYU/Surge/main/iQiYi.sgmodule
+```
+
 ## 115 分享跳转
 
 打开 `115.com` 或 `115cdn.com` 的分享链接时，自动跳转到 115 客户端，并保留链接中的分享码及访问码参数。

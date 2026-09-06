@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/BABYANYU/Surge/main/IPPure.sgmodule
 
 说明：
 
-- 点击面板可立即刷新，Surge 也会每 5 分钟检查一次更新。
+- 只有手动点击面板刷新时才会重新查询。
 - 查询请求遵循当前 Surge 分流规则，因此展示当前节点的出口 IP。
 - “原生 IP”依据 IPPure 的广播 IP 字段换算：广播 IP 显示“否”，非广播 IP 显示“是”。
 - IPPure 公共 API 尚处于测试阶段，检测结果仅供参考。
@@ -22,3 +22,15 @@ https://raw.githubusercontent.com/BABYANYU/Surge/main/IPPure.sgmodule
 ## 其他模块
 
 - [Bilibili 空降助手](./Bilibili空降助手.sgmodule)
+
+## Cron 定时切换
+
+通过 Surge 模块参数设置两个时段，定时切换指定 `select` 策略组的节点或子策略组。
+
+[一键安装 Cron 定时切换模块](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Fmain%2FCron.sgmodule)
+
+模块地址：
+
+```text
+https://raw.githubusercontent.com/BABYANYU/Surge/main/Cron.sgmodule
+```

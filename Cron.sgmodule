@@ -1,0 +1,15 @@
+#!name=Cron 定时切换
+#!desc=按两个首尾相接的时间段，自动切换指定 select 策略组的策略
+#!system=ios
+#!arguments=Group:AI,A_Start_HH:20,A_Start_MM:30,A_Policy:香港 A,B_Start_HH:22,B_Start_MM:30,B_Policy:香港 B
+#!arguments-desc=HH 为小时（00–23），MM 为分钟（00–59）。Policy 可填节点、子策略组或 DIRECT，名称必须与 Surge 完全一致。
+
+[Panel]
+Cron = title="Cron",content="点击刷新查看定时切换状态",icon=clock.arrow.2.circlepath,icon-color=#64D2FF,script-name=cron-policy-panel,update-interval=-1
+
+[Script]
+cron-policy-a = type=cron,cronexp="{{{A_Start_MM}}} {{{A_Start_HH}}} * * *",wake-system=true,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/cron-policy.js,script-update-interval=1,argument="{{{Group}}}§{{{A_Start_HH}}}§{{{A_Start_MM}}}§{{{A_Policy}}}§{{{B_Start_HH}}}§{{{B_Start_MM}}}§{{{B_Policy}}}"
+cron-policy-b = type=cron,cronexp="{{{B_Start_MM}}} {{{B_Start_HH}}} * * *",wake-system=true,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/cron-policy.js,script-update-interval=1,argument="{{{Group}}}§{{{A_Start_HH}}}§{{{A_Start_MM}}}§{{{A_Policy}}}§{{{B_Start_HH}}}§{{{B_Start_MM}}}§{{{B_Policy}}}"
+cron-policy-start = type=event,event-name=engine-started,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/cron-policy.js,script-update-interval=1,argument="{{{Group}}}§{{{A_Start_HH}}}§{{{A_Start_MM}}}§{{{A_Policy}}}§{{{B_Start_HH}}}§{{{B_Start_MM}}}§{{{B_Policy}}}"
+cron-policy-reload = type=event,event-name=profile-reloaded,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/cron-policy.js,script-update-interval=1,argument="{{{Group}}}§{{{A_Start_HH}}}§{{{A_Start_MM}}}§{{{A_Policy}}}§{{{B_Start_HH}}}§{{{B_Start_MM}}}§{{{B_Policy}}}"
+cron-policy-panel = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/cron-policy.js,script-update-interval=1,argument="{{{Group}}}§{{{A_Start_HH}}}§{{{A_Start_MM}}}§{{{A_Policy}}}§{{{B_Start_HH}}}§{{{B_Start_MM}}}§{{{B_Policy}}}"

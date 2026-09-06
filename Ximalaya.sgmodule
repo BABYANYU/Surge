@@ -1,9 +1,9 @@
 #!name=喜马拉雅
-#!desc=喜马拉雅 Surge 适配模块；远程脚本跟随上游更新
+#!desc=喜马拉雅 Surge 适配模块；远程脚本仅手动更新
 #!system=ios
 
 [Script]
-Ximalaya = type=http-response,pattern=^https?:\/\/.+((ximalaya)|(xmcdn)).+(mobile-user\/v2\/homePage|product\/detail\/v1|v1\/album\/track\/ts|mobile-playpage\/track\/v4\/baseInfo\/ts|mobile-playpage\/playpage\/tabs\/v2|mobile-playpage\/playpage\/track\/qualityAndEffect|mobile\/download\/v2\/track|mobile-user-grade\/decoratorV2\/decorationDetails\/page|mobile-album\/album\/plant\/grass),requires-body=true,max-size=-1,script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/ximalaya.js,script-update-interval=86400
+Ximalaya = type=http-response,pattern=^https?:\/\/.+((ximalaya)|(xmcdn)).+(mobile-user\/v2\/homePage|product\/detail\/v1|v1\/album\/track\/ts|mobile-playpage\/track\/v4\/baseInfo\/ts|mobile-playpage\/playpage\/tabs\/v2|mobile-playpage\/playpage\/track\/qualityAndEffect|mobile\/download\/v2\/track|mobile-user-grade\/decoratorV2\/decorationDetails\/page|mobile-album\/album\/plant\/grass),requires-body=true,max-size=-1,script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/ximalaya.js,script-update-interval=-1
 
 [URL Rewrite]
 ^https?://passport\.ximalaya\.com/friendship-mobile/v1/findFriendsBanner/show/ _ reject

@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/BABYANYU/Surge/main/IPPure.sgmodule
 
 ## 喜马拉雅
 
-将上游圈 X 脚本适配为 Surge 模块，远程脚本每天自动检查更新。
+将上游圈 X 脚本适配为 Surge 模块。远程脚本关闭自动更新，仅在 Surge 中手动刷新外部资源时检查更新。
 
 [一键安装喜马拉雅模块](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Fmain%2FXimalaya.sgmodule)
 

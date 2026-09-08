@@ -6,7 +6,7 @@
 
   var BLUE = "#5B9CF5";
   var CONFIG_URL = "https://www.speedtest.net/api/js/config-sdk?engine=js&limit=10&https_functional=true";
-  var INITIAL_CHUNK_BYTES = 8 * 1024 * 1024;
+  var INITIAL_CHUNK_BYTES = 24 * 1024 * 1024;
   var MIN_CHUNK_BYTES = 1 * 1024 * 1024;
   var activeChunkBytes = INITIAL_CHUNK_BYTES;
   var settings = parseArguments(typeof $argument === "string" ? $argument : "");
@@ -38,11 +38,12 @@
 
     var mbps = download.bytes * 8 / download.seconds / 1000000;
     var loss = latency.lossCount / settings.ping_count * 100;
+    var policyName = getSelectedPolicyName("Proxy");
 
     $done({
       title: "Single-Stream",
       content: [
-        "Location: " + selected.location,
+        "Location: " + policyName,
         "Download: " + formatNumber(mbps, 1) + " Mbps",
         "Ping: " + formatNumber(latency.ping, 0) + " ms",
         "Jitter: " + formatNumber(latency.jitter, 0) + " ms",
@@ -213,6 +214,29 @@
     };
     if (token) headers.Authorization = "Bearer " + token;
     return headers;
+  }
+
+  function getSelectedPolicyName(groupName) {
+    try {
+      if (typeof $surge === "undefined" || typeof $surge.selectGroupDetails !== "function") return groupName;
+      var details = $surge.selectGroupDetails();
+      var decisions = details && details.decisions ? details.decisions : {};
+      var keys = Object.keys(decisions);
+      var matchedGroup = keys.filter(function (key) {
+        return key.toLowerCase() === groupName.toLowerCase();
+      })[0];
+      if (!matchedGroup) return groupName;
+
+      var selected = decisions[matchedGroup];
+      var visited = {};
+      while (selected && decisions[selected] && !visited[selected]) {
+        visited[selected] = true;
+        selected = decisions[selected];
+      }
+      return selected || groupName;
+    } catch (_) {
+      return groupName;
+    }
   }
 
   function httpGet(options) {

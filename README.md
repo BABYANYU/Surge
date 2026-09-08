@@ -2,6 +2,20 @@
 
 项目维护与跨设备交接说明：[PROJECT_CONTEXT.md](./PROJECT_CONTEXT.md)
 
+## Single-Stream 单流测速
+
+使用 Surge 当前实际出口执行 Ookla 单流下载测速，显示测速服务器位置、下载速度、延迟、抖动和 HTTP 探测丢包率。
+
+[一键安装 Single-Stream 模块](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Fmain%2FSingle-Stream.sgmodule)
+
+模块地址：
+
+```text
+https://raw.githubusercontent.com/BABYANYU/Surge/main/Single-Stream.sgmodule
+```
+
+默认在测速满 8 秒或下载达到 2 GB 时停止，以先达到者为准；仅在手动刷新面板时测速。
+
 ## IPPure IP 纯净度
 
 在 Surge 信息面板中查询当前出口 IP，展示位置、ASN、风险分和原生 IP 状态。数据来自 [IPPure](https://ippure.com/)。

@@ -6,7 +6,9 @@
 
   var BLUE = "#5B9CF5";
   var CONFIG_URL = "https://www.speedtest.net/api/js/config-sdk?engine=js&limit=10&https_functional=true";
-  var CHUNK_BYTES = 16 * 1024 * 1024;
+  var INITIAL_CHUNK_BYTES = 8 * 1024 * 1024;
+  var MIN_CHUNK_BYTES = 1 * 1024 * 1024;
+  var activeChunkBytes = INITIAL_CHUNK_BYTES;
   var settings = parseArguments(typeof $argument === "string" ? $argument : "");
 
   try {
@@ -160,7 +162,7 @@
     if (seconds <= 0) return;
     var started = Date.now();
     while ((Date.now() - started) / 1000 < seconds) {
-      await downloadChunk(server, token, CHUNK_BYTES, 8);
+      await downloadChunk(server, token, activeChunkBytes, 8);
     }
   }
 
@@ -171,7 +173,7 @@
 
     while (received < capBytes && (Date.now() - started) / 1000 < seconds) {
       var remaining = capBytes - received;
-      var size = Math.min(CHUNK_BYTES, remaining);
+      var size = Math.min(activeChunkBytes, remaining);
       var elapsed = (Date.now() - started) / 1000;
       var timeout = Math.max(2, Math.ceil(seconds - elapsed) + 2);
       received += await downloadChunk(server, token, size, timeout);
@@ -184,15 +186,23 @@
   }
 
   async function downloadChunk(server, token, size, timeout) {
-    var response = await httpGet({
-      url: server.baseUrl + "/download?size=" + size + "&_=" + Date.now() + Math.random(),
-      timeout: timeout,
-      "binary-mode": true,
-      headers: requestHeaders(token, true)
-    });
-    if (response.status < 200 || response.status >= 300) throw new Error("Download server returned HTTP " + response.status);
-    if (!response.data || typeof response.data.byteLength !== "number") throw new Error("Invalid download response");
-    return response.data.byteLength;
+    try {
+      var response = await httpGet({
+        url: server.baseUrl + "/download?size=" + size + "&_=" + Date.now() + Math.random(),
+        timeout: timeout,
+        "binary-mode": true,
+        headers: requestHeaders(token, true)
+      });
+      if (response.status < 200 || response.status >= 300) throw new Error("Download server returned HTTP " + response.status);
+      if (!response.data || typeof response.data.byteLength !== "number") throw new Error("Invalid download response");
+      return response.data.byteLength;
+    } catch (error) {
+      if (/response body exceeds size limit/i.test(cleanError(error)) && size > MIN_CHUNK_BYTES) {
+        activeChunkBytes = Math.max(MIN_CHUNK_BYTES, Math.floor(size / 2));
+        return downloadChunk(server, token, activeChunkBytes, timeout);
+      }
+      throw error;
+    }
   }
 
   function requestHeaders(token, binary) {

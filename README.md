@@ -21,6 +21,20 @@ https://raw.githubusercontent.com/BABYANYU/Surge/main/IPPure.sgmodule
 - “原生 IP”依据 IPPure 的广播 IP 字段换算：广播 IP 显示“否”，非广播 IP 显示“是”。
 - IPPure 公共 API 尚处于测试阶段，检测结果仅供参考。
 
+## RoutePure
+
+合并 Route 与 IPPure：展示代理入口、落地信息，并在落地信息下方显示原生状态和风险值。
+
+[一键安装 RoutePure 模块](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Fmain%2FRoutePure.sgmodule)
+
+模块地址：
+
+```text
+https://raw.githubusercontent.com/BABYANYU/Surge/main/RoutePure.sgmodule
+```
+
+仅在手动点击面板刷新时查询；原有 Route 与 IPPure 模块保持不变。
+
 ## 其他模块
 
 - [Bilibili 空降助手](./Bilibili空降助手.sgmodule)

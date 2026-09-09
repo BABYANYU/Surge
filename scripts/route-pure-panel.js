@@ -1,0 +1,354 @@
+// Route + IPPure panel
+const PANEL = {
+  icon: "globe.asia.australia",
+  color: "#6699FF",
+};
+
+const IPPURE_URL = "https://my.ippure.com/v1/info";
+
+main().catch((error) => {
+  finishError(error && error.message ? error.message : "查询失败");
+});
+
+async function main() {
+  const purity = await lookupPurity();
+  const target = purity.ip ? `/${encodeURIComponent(purity.ip)}` : "/";
+  const landing = parseIPWho(
+    await getJSON(`https://ipwho.is${target}?lang=zh-CN&surge_panel=${Date.now()}`)
+  );
+  const request = await findPanelRequest();
+  const policy = clean(request && request.policyName) || "当前策略";
+  const entranceIP = extractProxyIP(request && request.remoteAddress);
+  const hasDistinctEntrance = entranceIP && !sameIP(entranceIP, landing.ip);
+
+  let entrance = {};
+  if (hasDistinctEntrance) {
+    entrance = await lookupEntrance(entranceIP).catch(() => ({}));
+  }
+
+  const lines = [];
+  if (hasDistinctEntrance) {
+    lines.push(
+      `入口 IP：${entranceIP}`,
+      `运营商：${formatOperator(entrance.operator)}`,
+      `位置：${formatLocation(entrance)}`,
+      ""
+    );
+  }
+
+  lines.push(
+    `落地 IP：${landing.ip}`,
+    `运营商：${formatOperator(landing.operator)}`,
+    `位置：${formatLocation(landing)}`,
+    `原生：${purity.native}`,
+    `风险：${purity.score === null ? "未知" : purity.score}`
+  );
+
+  $done({
+    title: `Route：${fitText(policy, 24)}`,
+    content: lines.join("\n"),
+    icon: PANEL.icon,
+    "icon-color": PANEL.color,
+  });
+}
+
+async function lookupPurity() {
+  try {
+    const data = await getJSON(IPPURE_URL);
+    if (!data || !data.ip) throw new Error("IPPure 未返回 IP");
+
+    return {
+      ip: clean(data.ip),
+      score: normalizeScore(data.fraudScore),
+      native: nativeLabel(data.isBroadcast),
+    };
+  } catch (_) {
+    return { ip: "", score: null, native: "未知" };
+  }
+}
+
+function getJSON(url) {
+  return new Promise((resolve, reject) => {
+    $httpClient.get(
+      {
+        url,
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "Surge RoutePure Panel/1.0",
+        },
+      },
+      (error, response, body) => {
+        const status = Number(response && (response.status || response.statusCode));
+
+        if (error) return reject(new Error(String(error)));
+        if (status && (status < 200 || status >= 300)) {
+          return reject(new Error(`HTTP ${status}`));
+        }
+
+        try {
+          resolve(JSON.parse(body));
+        } catch (_) {
+          reject(new Error("接口返回格式错误"));
+        }
+      }
+    );
+  });
+}
+
+function findPanelRequest() {
+  return new Promise((resolve) => {
+    if (typeof $httpAPI === "undefined") return resolve(null);
+
+    $httpAPI("GET", "/v1/requests/recent", null, (result) => {
+      const requests = result && Array.isArray(result.requests) ? result.requests : [];
+      const request = requests
+        .slice(0, 20)
+        .find((item) => /ipwho\.is/i.test(String(item && item.URL)));
+      resolve(request || null);
+    });
+  });
+}
+
+async function lookupEntrance(ip) {
+  const encodedIP = encodeURIComponent(ip);
+
+  try {
+    return parseEntranceIPWho(
+      await getJSON(`https://ipwho.is/${encodedIP}?lang=zh-CN&surge_panel=${Date.now()}`)
+    );
+  } catch (_) {
+    return parseIPSB(
+      await getJSON(`https://api.ip.sb/geoip/${encodedIP}?surge_panel=${Date.now()}`)
+    );
+  }
+}
+
+function parseIPWho(data) {
+  if (!data || data.success === false || !data.ip) {
+    throw new Error("无法获取落地 IP 信息");
+  }
+
+  return {
+    ip: data.ip,
+    countryCode: data.country_code,
+    country: data.country,
+    region: data.region,
+    city: data.city,
+    operator: data.connection && (data.connection.isp || data.connection.org),
+  };
+}
+
+function parseEntranceIPWho(data) {
+  if (!data || data.success === false || !data.ip) {
+    throw new Error("无法获取入口信息");
+  }
+
+  const connection = data.connection || {};
+  const organization = clean(connection.org);
+  const isp = clean(connection.isp);
+
+  return {
+    countryCode: data.country_code,
+    country: data.country,
+    region: data.region,
+    city: data.city,
+    operator: /^(private customer|unknown|n\/a)$/i.test(organization)
+      ? isp
+      : organization || isp,
+  };
+}
+
+function parseIPSB(data) {
+  if (!data || !data.ip) {
+    throw new Error("无法获取入口信息");
+  }
+
+  return {
+    countryCode: data.country_code,
+    country: data.country,
+    region: data.region,
+    city: data.city,
+    operator: data.organization || data.isp || data.asn_organization,
+  };
+}
+
+function extractProxyIP(value) {
+  let valueText = clean(value).replace(/\s*\(Proxy\)\s*/gi, "");
+  if (!valueText) return "";
+
+  const bracketIPv6 = valueText.match(/^\[([^\]]+)\](?::\d+)?$/);
+  if (bracketIPv6) return bracketIPv6[1];
+
+  if (/^\d{1,3}(?:\.\d{1,3}){3}:\d+$/.test(valueText)) {
+    valueText = valueText.replace(/:\d+$/, "");
+  }
+
+  return valueText;
+}
+
+function sameIP(left, right) {
+  return normalizeIP(left) === normalizeIP(right);
+}
+
+function normalizeIP(value) {
+  return clean(value).replace(/^\[|\]$/g, "").toLowerCase();
+}
+
+function normalizeScore(value) {
+  const score = Number(value);
+  if (!Number.isFinite(score)) return null;
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function nativeLabel(isBroadcast) {
+  if (isBroadcast === true) return "否";
+  if (isBroadcast === false) return "是";
+  return "未知";
+}
+
+function formatLocation(info) {
+  const code = String((info && info.countryCode) || "").toUpperCase();
+  const country = countryName(code, info && info.country);
+  const region = trimPlaceSuffix(info && info.region);
+  const city = trimPlaceSuffix(info && info.city);
+
+  if (["HK", "MO", "TW"].includes(code)) return country || "未知";
+  if (code === "CN" && ["北京", "上海", "天津", "重庆"].includes(region)) return region;
+
+  const values = code === "CN" ? unique([region, city]) : unique([country, region, city]);
+  return fitText(values.join(" ") || country || "未知", 24);
+}
+
+function formatOperator(value) {
+  const source = normalizeProvider(value);
+  const lower = source.toLowerCase();
+
+  if (/huawei|hwcsnet/.test(lower)) return "Huawei Cloud";
+  if (/ucloud/.test(lower)) return "UCloud";
+  if (/alibaba cloud|aliyun/.test(lower)) return "Alibaba Cloud";
+  if (/tencent cloud|qcloud/.test(lower)) return "Tencent Cloud";
+  if (/amazon|\baws\b/.test(lower)) return "AWS";
+  if (/google cloud|google llc/.test(lower)) return "Google Cloud";
+  if (/microsoft|azure/.test(lower)) return "Microsoft Azure";
+  if (/\bdmit\b/.test(lower)) return "DMIT Cloud";
+  if (/eons data communications|\bedcl\b/.test(lower)) return "Eons Data";
+  if (/chinanet|china telecom|中国电信/.test(lower)) return "中国电信";
+  if (/china unicom|unicom|中国联通/.test(lower)) return "中国联通";
+  if (/china mobile|cmcc|中国移动/.test(lower)) return "中国移动";
+  if (/china broadnet|中国广电/.test(lower)) return "中国广电";
+
+  return compactProvider(source, 18);
+}
+
+function compactProvider(value, maxWidth) {
+  const source = normalizeProvider(value) || "未知";
+  if (displayWidth(source) <= maxWidth) return source;
+
+  let candidate = normalizeProvider(
+    source.replace(
+      /(?:,?\s+(?:incorporated|inc\.?|limited|ltd\.?|llc|corporation|corp\.?|company|co\.?))+$/i,
+      ""
+    )
+  );
+  if (candidate && displayWidth(candidate) <= maxWidth) return candidate;
+
+  const trailingNoise = /\s+(?:services?|communications?|technolog(?:y|ies)|networks?|telecommunications?|telecom|hosting|internet|cloud|electron(?:ic)?|solutions?|systems?|groups?|holdings?|international|global|providers?)$/i;
+  while (candidate) {
+    const shorter = normalizeProvider(candidate.replace(trailingNoise, ""));
+    if (!shorter || shorter === candidate) break;
+    candidate = shorter;
+    if (displayWidth(candidate) <= maxWidth) return candidate;
+  }
+
+  return fitProviderWords(candidate || source, maxWidth);
+}
+
+function fitProviderWords(value, maxWidth) {
+  const words = normalizeProvider(value).split(" ").filter(Boolean);
+  let output = "";
+
+  for (const word of words) {
+    const next = output ? `${output} ${word}` : word;
+    if (displayWidth(next) > maxWidth) break;
+    output = next;
+  }
+
+  return output || fitText(words[0] || "未知", maxWidth);
+}
+
+function normalizeProvider(value) {
+  return String(value || "")
+    .replace(/[()[\]]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function displayWidth(value) {
+  let width = 0;
+  for (const character of String(value || "")) {
+    width += /[^\x00-\xff]/.test(character) ? 2 : 1;
+  }
+  return width;
+}
+
+function trimPlaceSuffix(value) {
+  return clean(value)
+    .replace(/\s+(Sheng|Shi|Zizhiqu|Tequ)$/i, "")
+    .replace(/(特别行政区|壮族自治区|回族自治区|维吾尔自治区|自治区|省|市)$/u, "");
+}
+
+function fitText(value, maxWidth) {
+  const input = clean(value);
+  let output = "";
+  let width = 0;
+
+  for (const character of input) {
+    const nextWidth = /[^\x00-\xff]/.test(character) ? 2 : 1;
+    if (width + nextWidth > maxWidth) return `${output.trim()}…`;
+    output += character;
+    width += nextWidth;
+  }
+
+  return output || "未知";
+}
+
+function countryName(code, fallback) {
+  const names = {
+    CN: "中国大陆",
+    HK: "中国香港",
+    MO: "中国澳门",
+    TW: "中国台湾",
+    JP: "日本",
+    SG: "新加坡",
+    US: "美国",
+    GB: "英国",
+    KR: "韩国",
+    DE: "德国",
+    FR: "法国",
+    CA: "加拿大",
+    AU: "澳大利亚",
+  };
+  return names[String(code || "").toUpperCase()] || clean(fallback);
+}
+
+function unique(values) {
+  const output = [];
+  values.forEach((value) => {
+    const item = clean(value);
+    if (item && !output.includes(item)) output.push(item);
+  });
+  return output;
+}
+
+function clean(value) {
+  return String(value || "").trim();
+}
+
+function finishError(message) {
+  $done({
+    title: "RoutePure",
+    content: `${message}\n\n请稍后点击面板重试`,
+    icon: "exclamationmark.triangle.fill",
+    "icon-color": "#FF453A",
+  });
+}

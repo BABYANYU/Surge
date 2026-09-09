@@ -1,6 +1,6 @@
 # Surge 项目上下文
 
-最后更新：2026-09-07
+最后更新：2026-09-10
 
 这份文件用于把项目交接给另一台电脑上的 Codex。开始修改前，请先完整阅读本文件，再检查仓库当前状态和实际代码；仓库文件始终是最终事实来源。
 
@@ -76,6 +76,16 @@
 - 运营商优先转换为简短品牌名，例如 `Huawei Cloud`、`UCloud`、`Alibaba Cloud`、`Tencent Cloud`、`DMIT Cloud`、`Eons Data`；其他长名称按显示宽度精简。
 - 面板仅手动查询。
 
+### RoutePure
+
+- 模块：[RoutePure.sgmodule](https://raw.githubusercontent.com/BABYANYU/Surge/main/RoutePure.sgmodule)
+- 生效脚本：`scripts/route-pure-panel.js`
+- 这是 Route 与 IPPure 的独立合并版本，不覆盖原有两个模块。
+- 保留 Route 的入口/落地判断、字段顺序、运营商精简和浅蓝色地球图标。
+- 在落地信息最下方增加 `原生`、`风险`两行，两项均来自 IPPure，并对应落地 IP。
+- IPPure 查询失败时，Route 信息仍然显示，`原生`和`风险`显示“未知”。
+- 面板仅手动查询，使用 `update-interval=-1` 和 `script-update-interval=1`。
+
 ### Cron 定时切换
 
 - 模块：[Cron.sgmodule](https://raw.githubusercontent.com/BABYANYU/Surge/main/Cron.sgmodule)
@@ -146,6 +156,7 @@
 ```text
 scripts/ippure-panel.js
 scripts/landing-ip-panel.js
+scripts/route-pure-panel.js
 scripts/cron-policy.js
 ```
 

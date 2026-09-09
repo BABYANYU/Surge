@@ -1,0 +1,9 @@
+#!name=RoutePure
+#!desc=显示代理入口、落地信息，并通过 IPPure 检测落地 IP 的原生状态和风险值
+#!system=ios
+
+[Panel]
+RoutePure = title="Route",content="点击刷新查询代理链与 IP 纯净度",icon=globe.asia.australia,icon-color=#6699FF,script-name=route-pure-panel,update-interval=-1
+
+[Script]
+route-pure-panel = type=generic,timeout=20,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/route-pure-panel.js,script-update-interval=1

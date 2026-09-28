@@ -1,0 +1,38 @@
+#!name=YouTube Plus
+#!author=gogrhw + Maasea + Aioneas + QingRex + VirgilClyne + BABYANYU
+#!category=YouTube
+#!desc=YouTube 去广告、隐藏 Shorts、画中画与后台播放，并为网页端提供双语字幕和 YouTube Music 歌词翻译。
+#!arguments=blockUpload:true,blockImmersive:true,blockShorts:true,debug:false,Type:Translate,AutoCC:false,ShowOnly:false,Position:Forward
+#!arguments-desc=- 内容过滤 -\nblockUpload：隐藏上传入口，[true, false]\nblockImmersive：隐藏沉浸式音乐入口，[true, false]\nblockShorts：隐藏 Shorts，[true, false]\ndebug：调试日志，[true, false]\n- 网页字幕翻译 -\nType：字幕类型，[Official, Translate]\nAutoCC：自动显示翻译字幕，[true, false]\nShowOnly：仅显示翻译字幕，[true, false]\nPosition：原字幕位置，[Forward, Reverse]
+
+[URL Rewrite]
+# PiP 与后台播放：保留完整原始 URL，仅移除 ctier=L 标记
+(^https?:\/\/[\w-]+\.googlevideo\.com\/(?!dclk_video_ads).+?)&ctier=L(&.+?),ctier,(.+) $1$2$3 302
+
+[Map Local]
+# 视频广告请求
+^https?:\/\/[\w-]+\.googlevideo\.com\/(?!(dclk_video_ads|videoplayback\?)).+&oad data-type=text data=" " status-code=200
+# 统计与页面广告请求
+^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads data-type=text data=" " status-code=200
+^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) data-type=text data=" " status-code=200
+^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?adcontext data-type=text data=" " status-code=200
+
+[Script]
+# YouTube App：唯一的 Protobuf 响应处理器，避免多个 http-response 脚本抢占同一响应
+youtube.response = type=http-response, pattern=^https?:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch), script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/youtube-plus/youtube.response.js, requires-body=true, binary-body-mode=true, max-size=-1, timeout=60, argument=blockUpload={{{blockUpload}}}&blockImmersive={{{blockImmersive}}}&blockShorts={{{blockShorts}}}&debug={{{debug}}}
+
+# 网页 Player JSON 字幕
+youtube-subtitles-request-player-json = type=http-request, pattern=^https?:\/\/(www|m|tv)\.youtube\.com\/youtubei\/v1\/player\?(.*), requires-body=true, max-size=-1, script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/youtube-plus/youtube-subtitles-request.js, argument=Type={{{Type}}}&AutoCC={{{AutoCC}}}&ShowOnly={{{ShowOnly}}}&Position={{{Position}}}
+youtube-subtitles-response-player-json = type=http-response, pattern=^https?:\/\/(www|m|tv)\.youtube\.com\/youtubei\/v1\/player\?(.*), requires-body=true, max-size=-1, script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/youtube-plus/youtube-subtitles-response.js, argument=Type={{{Type}}}&AutoCC={{{AutoCC}}}&ShowOnly={{{ShowOnly}}}&Position={{{Position}}}
+
+# 网页 Timedtext 双语字幕
+youtube-subtitles-request-timedtext = type=http-request, pattern=^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext\?(.*), requires-body=false, script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/youtube-plus/youtube-subtitles-request.js, argument=Type={{{Type}}}&AutoCC={{{AutoCC}}}&ShowOnly={{{ShowOnly}}}&Position={{{Position}}}
+youtube-subtitles-response-timedtext-composite = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext\?(.*)subtype=(Official|External), requires-body=true, max-size=-1, script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/youtube-plus/youtube-subtitles-composite-response.js, argument=Type={{{Type}}}&AutoCC={{{AutoCC}}}&ShowOnly={{{ShowOnly}}}&Position={{{Position}}}
+youtube-subtitles-response-timedtext-translate = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext\?(.*)subtype=Translate, requires-body=true, max-size=-1, script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/youtube-plus/youtube-subtitles-translate-response.js, argument=Type={{{Type}}}&AutoCC={{{AutoCC}}}&ShowOnly={{{ShowOnly}}}&Position={{{Position}}}
+
+# YouTube Music 网页歌词翻译
+youtube-subtitles-request-browse-json = type=http-request, pattern=^https?:\/\/music\.youtube\.com\/youtubei\/v1\/browse\?(.*), requires-body=true, max-size=-1, script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/youtube-plus/youtube-subtitles-request.js, argument=Type={{{Type}}}&AutoCC={{{AutoCC}}}&ShowOnly={{{ShowOnly}}}&Position={{{Position}}}
+youtube-subtitles-response-browse-json = type=http-response, pattern=^https?:\/\/music\.youtube\.com\/youtubei\/v1\/browse\?(.*)subtype=Translate, requires-body=true, max-size=-1, script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/youtube-plus/youtube-subtitles-translate-response.js, argument=Type={{{Type}}}&AutoCC={{{AutoCC}}}&ShowOnly={{{ShowOnly}}}&Position={{{Position}}}
+
+[MITM]
+hostname = %APPEND% -redirector*.googlevideo.com, *.googlevideo.com, www.youtube.com, m.youtube.com, tv.youtube.com, s.youtube.com, music.youtube.com, youtubei.googleapis.com

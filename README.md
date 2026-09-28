@@ -35,6 +35,18 @@ https://raw.githubusercontent.com/BABYANYU/Surge/main/RoutePure.sgmodule
 
 仅在手动点击面板刷新时查询；原有 Route 与 IPPure 模块保持不变。
 
+## YouTube Plus
+
+YouTube 去广告、隐藏 Shorts、画中画与后台播放，并为网页端提供双语字幕和 YouTube Music 歌词翻译。该版本修正了上游 PiP 重写规则，并移除了会与主去广告脚本冲突的 Protobuf 字幕响应项。
+
+[一键安装 YouTube Plus 模块](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Fmain%2FYouTube-Plus.sgmodule)
+
+模块地址：
+
+```text
+https://raw.githubusercontent.com/BABYANYU/Surge/main/YouTube-Plus.sgmodule
+```
+
 ## 其他模块
 
 - [Bilibili 空降助手](./Bilibili空降助手.sgmodule)

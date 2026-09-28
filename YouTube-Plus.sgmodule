@@ -1,5 +1,4 @@
 #!name=YouTube Plus
-#!author=gogrhw + Maasea + Aioneas + QingRex + VirgilClyne + BABYANYU
 #!category=YouTube
 #!desc=YouTube 去广告、隐藏 Shorts、画中画与后台播放，并为网页端提供双语字幕和 YouTube Music 歌词翻译。
 #!arguments=blockUpload:true,blockImmersive:true,blockShorts:true,debug:false,Type:Translate,AutoCC:false,ShowOnly:false,Position:Forward

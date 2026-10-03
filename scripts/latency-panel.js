@@ -67,8 +67,8 @@ function renderResults(nodes, samples) {
   const content = rows
     .map((row) =>
       row.latency === null
-        ? `${row.name}  失败`
-        : `${row.name}  ${Math.round(row.latency)} ms｜${formatJitter(row.jitter)} ms`
+        ? `失败 ${row.name}`
+        : `${Math.round(row.latency)} ms · ${formatJitter(row.jitter)} ms ${row.name}`
     )
     .join("\n\n");
 

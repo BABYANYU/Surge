@@ -1,7 +1,6 @@
 #!name=YouTube Enhance
 #!desc=移除 YouTube 广告，启用后台播放、画中画与最高 4 倍速；支持最高画质、Jump Ahead、内容精简和实验性原生下载。
 #!author=gholts
-#!category=YouTube
 #!arguments=block_upload:true,block_shorts:false,auto_hd:true,block_games:true,block_vertical_live:false,jump_ahead:true,block_store:true,native_download:false
 #!arguments-desc=block_upload：隐藏 YouTube 导航栏中的“上传”入口。\nblock_shorts：隐藏 YouTube 导航栏中的 Shorts 入口。\nauto_hd：优先选择最高可用画质，并阻止自动降低画质。\nblock_games：隐藏 YouTube Playables 游戏推荐。\nblock_vertical_live：隐藏各页面中的竖屏直播推荐。\njump_ahead：启用 YouTube 原生“跳过精彩片段”按钮，同时移除相关推广。\nblock_store：隐藏视频下方及频道主页中的创作者商店和购物内容。\nnative_download：实验性原生下载；未指定画质时使用 720p，能否使用仍受服务器限制。
 #!requirement=SYSTEM = 'iOS'

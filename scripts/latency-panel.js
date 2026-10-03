@@ -73,7 +73,7 @@ function renderResults(nodes, samples) {
     .join("\n");
 
   $done({
-    title: `LATENCY·${GROUP_NAME}`,
+    title: `Latency · ${GROUP_NAME}`,
     content,
     icon: "gauge.with.dots.needle.67percent",
     "icon-color": "#6699FF",
@@ -82,7 +82,7 @@ function renderResults(nodes, samples) {
 
 function renderError(message) {
   $done({
-    title: `LATENCY·${GROUP_NAME}`,
+    title: `Latency · ${GROUP_NAME}`,
     content: `${message}\n请稍后点击面板重试`,
     icon: "gauge.with.dots.needle.67percent",
     "icon-color": "#6699FF",

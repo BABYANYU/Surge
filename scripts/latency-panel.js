@@ -1,28 +1,23 @@
 // Proxy latency panel
 const GROUP_NAME = "Proxy";
 const TEST_URL = "http://cp.cloudflare.com/generate_204";
-const WARMUP_ROUNDS = 1;
-const TEST_ROUNDS = 8;
+const TEST_ROUNDS = 5;
 
 getGroupNodes((error, nodes) => {
   if (error) return renderError(error);
   if (!nodes.length) return renderError(`策略组 ${GROUP_NAME} 中没有可检测节点`);
 
   const samples = Object.fromEntries(nodes.map((name) => [name, []]));
-  const totalRounds = WARMUP_ROUNDS + TEST_ROUNDS;
-
   runRound(0);
 
   function runRound(round) {
-    if (round >= totalRounds) return renderResults(nodes, samples);
+    if (round >= TEST_ROUNDS) return renderResults(nodes, samples);
 
     testPolicies(nodes, (result) => {
-      if (round >= WARMUP_ROUNDS) {
-        nodes.forEach((name) => {
-          const value = Number(result && result[name] && result[name]["round-one-total"]);
-          if (Number.isFinite(value) && value > 0) samples[name].push(value);
-        });
-      }
+      nodes.forEach((name) => {
+        const value = Number(result && result[name] && result[name]["round-one-total"]);
+        if (Number.isFinite(value) && value > 0) samples[name].push(value);
+      });
       runRound(round + 1);
     });
   }
@@ -53,14 +48,13 @@ function testPolicies(names, done) {
 function renderResults(nodes, samples) {
   const rows = nodes.map((name) => {
     const values = samples[name];
-    if (!values.length) return { name, latency: null, jitter: null, complete: false };
+    if (!values.length) return { name, latency: null, jitter: null };
 
     const latency = median(values);
     return {
       name,
       latency,
       jitter: median(values.map((value) => Math.abs(value - latency))),
-      complete: values.length === TEST_ROUNDS,
     };
   });
 
@@ -70,8 +64,6 @@ function renderResults(nodes, samples) {
     return a.latency - b.latency;
   });
 
-  const allFailed = rows.every((row) => row.latency === null);
-  const incomplete = rows.some((row) => !row.complete);
   const content = rows
     .map((row) =>
       row.latency === null
@@ -81,19 +73,19 @@ function renderResults(nodes, samples) {
     .join("\n");
 
   $done({
-    title: `延迟检测｜${TEST_ROUNDS}轮`,
+    title: "LATENCY",
     content,
-    icon: allFailed ? "exclamationmark.triangle.fill" : "timer",
-    "icon-color": allFailed ? "#FF453A" : incomplete ? "#FF9F0A" : "#6699FF",
+    icon: "gauge.with.dots.needle.67percent",
+    "icon-color": "#6699FF",
   });
 }
 
 function renderError(message) {
   $done({
-    title: "延迟检测",
+    title: "LATENCY",
     content: `${message}\n请稍后点击面板重试`,
-    icon: "exclamationmark.triangle.fill",
-    "icon-color": "#FF453A",
+    icon: "gauge.with.dots.needle.67percent",
+    "icon-color": "#6699FF",
   });
 }
 

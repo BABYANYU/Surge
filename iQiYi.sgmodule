@@ -2,7 +2,6 @@
 #!desc=Remove Ads
 #!system=ios
 #!requirement=CORE_VERSION>=20 && SYSTEM = 'iOS'
-#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/iQiYi_Video.png
 #!openUrl=https://apps.apple.com/app/id1190755526
 
 [Rule]

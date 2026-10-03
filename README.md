@@ -2,26 +2,26 @@
 
 自用 Surge 模块集合，覆盖节点检测、策略切换、流媒体去广告与客户端跳转。全部模块以 `main` 分支稳定链接安装，脚本可随仓库更新自动生效。
 
-## 模块一览
-
 | 模块 | 用途 | 安装 |
 | --- | --- | --- |
-| IPPure | 出口 IP 纯净度检测 | [一键安装](https://babyanyu.github.io/Surge/?m=ippure) |
-| RoutePure | 代理链与落地纯净度 | [一键安装](https://babyanyu.github.io/Surge/?m=routepure) |
-| 代理链信息 | 代理策略、入口与落地 | [一键安装](https://babyanyu.github.io/Surge/?m=landing) |
-| Latency | 综合延迟与抖动检测 | [一键安装](https://babyanyu.github.io/Surge/?m=latency) |
-| Cron | 定时自动切换节点 | [一键安装](https://babyanyu.github.io/Surge/?m=cron) |
-| YouTube Plus | YouTube 去广告与字幕 | [一键安装](https://babyanyu.github.io/Surge/?m=youtube) |
-| 爱奇艺去广告 | 移除爱奇艺多处广告 | [一键安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
-| 115 分享跳转 | 分享链接唤起客户端 | [一键安装](https://babyanyu.github.io/Surge/?m=share115) |
-| 喜马拉雅 | 解锁 SVIP | [一键安装](https://babyanyu.github.io/Surge/?m=ximalaya) |
-| Bilibili 空降助手 | 跳过视频广告片段 | [一键安装](https://babyanyu.github.io/Surge/?m=bilibili) |
+| IPPure | 出口 IP 纯净度检测 | [安装](https://babyanyu.github.io/Surge/?m=ippure) |
+| RoutePure | 代理链与落地纯净度 | [安装](https://babyanyu.github.io/Surge/?m=routepure) |
+| 代理链信息 | 代理策略、入口与落地 | [安装](https://babyanyu.github.io/Surge/?m=landing) |
+| Latency | 综合延迟与抖动检测 | [安装](https://babyanyu.github.io/Surge/?m=latency) |
+| Cron | 定时自动切换节点 | [安装](https://babyanyu.github.io/Surge/?m=cron) |
+| YouTube Plus | YouTube 去广告与字幕 | [安装](https://babyanyu.github.io/Surge/?m=youtube) |
+| 爱奇艺去广告 | 移除爱奇艺多处广告 | [安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
+| 115 分享跳转 | 分享链接唤起客户端 | [安装](https://babyanyu.github.io/Surge/?m=share115) |
+| 喜马拉雅 | 解锁 SVIP | [安装](https://babyanyu.github.io/Surge/?m=ximalaya) |
+| Bilibili 空降助手 | 跳过视频广告片段 | [安装](https://babyanyu.github.io/Surge/?m=bilibili) |
 
-## 面板模块
+---
 
-以下模块在 Surge 的「信息」面板中显示一行可点击的条目，点击后才发起请求，不后台轮询。
+# <img src="https://api.iconify.design/mdi:view-dashboard-outline.svg?color=%236699ff" width="28" alt=""> 面板模块
 
-### IPPure
+> 在 Surge 的「信息」面板中显示为一行可点击条目，点击后才发起请求，不后台轮询。
+
+## <img src="https://api.iconify.design/mdi:ip-network.svg?color=%236699ff" width="24" alt=""> IPPure
 
 查询当前出口 IP 的位置、ASN、风险分与原生 IP 状态，数据来自 [IPPure](https://ippure.com/)。
 
@@ -29,15 +29,21 @@
 - 「原生 IP」依据 IPPure 的广播 IP 字段换算：广播 IP 显示「否」，非广播 IP 显示「是」。
 - IPPure 公共 API 仍处于测试阶段，结果仅供参考。
 
-### RoutePure
+---
+
+## <img src="https://api.iconify.design/mdi:routes.svg?color=%236699ff" width="24" alt=""> RoutePure
 
 在 IPPure 基础上合并代理链信息：展示代理策略、入口、落地，并在落地信息下方追加原生状态与风险值。原有 Route 与 IPPure 模块可同时保留，互不影响。
 
-### 代理链信息
+---
+
+## <img src="https://api.iconify.design/mdi:transit-connection-variant.svg?color=%236699ff" width="24" alt=""> 代理链信息
 
 仅展示代理策略、入口与落地三段信息，不查询纯净度，请求更轻。
 
-### Latency
+---
+
+## <img src="https://api.iconify.design/mdi:speedometer.svg?color=%236699ff" width="24" alt=""> Latency
 
 对指定策略组的全部节点连续测试 5 轮，输出综合延迟与抖动两列。
 
@@ -46,17 +52,15 @@
 - 每轮由 Surge 同批并发检测全部节点，节点之间条件一致。
 - 失败不计为高延迟，改为显示成功轮数。
 
-参数：
-
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
 | Group | Proxy | 策略组名称，须与 Surge 完全一致 |
 
-### Cron
+---
+
+## <img src="https://api.iconify.design/mdi:clock-outline.svg?color=%236699ff" width="24" alt=""> Cron
 
 将一天划分为两个首尾相接的时段，在切换点自动把指定 `select` 策略组切换到对应节点或子策略组。
-
-参数：
 
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
@@ -73,15 +77,17 @@
 - 留空表示不切换，空参数只写参数名、不写冒号（`A_Policy` 正确，`A_Policy:` 会报错）。
 - 模块会生成 `cron-policy-a`、`cron-policy-b` 等定时脚本，参数变更后需重新安装模块。
 
-## 应用模块
+---
 
-### YouTube Plus
+# <img src="https://api.iconify.design/mdi:apps.svg?color=%2334c759" width="28" alt=""> 应用模块
+
+> 安装后由 Surge 在后台自动拦截与改写，无需手动点击，多数需要开启 MITM。
+
+## <img src="https://api.iconify.design/mdi:youtube.svg?color=%2334c759" width="24" alt=""> YouTube Plus
 
 YouTube 去广告、隐藏 Shorts、画中画与后台播放，并为网页端提供双语字幕和 YouTube Music 歌词翻译。
 
 相对上游版本做了两处修正：修复 PiP 重写规则的捕获组，并移除会与主去广告脚本冲突的 Protobuf 字幕响应项。
-
-参数：
 
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
@@ -96,31 +102,26 @@ YouTube 去广告、隐藏 Shorts、画中画与后台播放，并为网页端�
 
 MITM 覆盖 `*.googlevideo.com`、`www.youtube.com`、`m.youtube.com`、`tv.youtube.com`、`s.youtube.com`、`music.youtube.com`、`youtubei.googleapis.com`。
 
-### 爱奇艺去广告
+---
+
+## <img src="https://api.iconify.design/mdi:movie-open-outline.svg?color=%2334c759" width="24" alt=""> 爱奇艺去广告
 
 移除开屏、焦点图、瀑布流与搜索广告，关闭青少年弹窗，并精简底栏与「我的」页面。要求 Surge 核心版本不低于 20 且运行于 iOS。
 
-### 115 分享跳转
+---
+
+## <img src="https://api.iconify.design/mdi:cloud-outline.svg?color=%2334c759" width="24" alt=""> 115 分享跳转
 
 打开 `115.com` 或 `115cdn.com` 的分享链接时，自动跳转到 115 客户端，并保留链接中的分享码与访问码参数。
 
-### 喜马拉雅
+---
+
+## <img src="https://api.iconify.design/mdi:headphones.svg?color=%2334c759" width="24" alt=""> 喜马拉雅
 
 将上游圈 X 脚本适配为 Surge 模块，解锁 SVIP 相关限制。远程脚本关闭自动更新，仅在 Surge 中手动刷新外部资源时才检查更新。
 
-### Bilibili 空降助手
+---
+
+## <img src="https://api.iconify.design/mdi:television-play.svg?color=%2334c759" width="24" alt=""> Bilibili 空降助手
 
 通过 Protobuf 请求与响应改写跳过 B 站视频内的广告片段，需要 WebView 引擎参与处理。
-
-## 依赖脚本
-
-模块本身只声明规则与入口，实际逻辑放在 `scripts/` 下，由模块通过 raw 链接引用。因此这些脚本是模块的组成部分，不能单独删除。
-
-| 脚本 | 所属模块 |
-| --- | --- |
-| `scripts/ippure-panel.js` | IPPure |
-| `scripts/route-pure-panel.js` | RoutePure |
-| `scripts/landing-ip-panel.js` | 代理链信息 |
-| `scripts/latency-panel.js` | Latency |
-| `scripts/cron-policy.js` | Cron |
-| `scripts/youtube-plus/*.js` | YouTube Plus |

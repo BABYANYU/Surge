@@ -1,5 +1,5 @@
 #!name=IPPure
-#!desc=使用 IPPure 查询当前 Surge 出口 IP、位置、ASN、风险分及原生 IP 状态
+#!desc=查看代理入口、落地、原生度与风险值。
 #!system=ios
 
 [Panel]

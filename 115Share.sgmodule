@@ -1,6 +1,8 @@
 #!name=115 分享跳转
 #!desc=打开 115 分享链接时自动跳转到 115 客户端
 #!system=ios
+#!category=Yanyu宝宝小可爱
+#!icon=https://raw.githubusercontent.com/BABYANYU/Surge/main/assets/yanyu-category.jpg
 
 [URL Rewrite]
 ^https?:\/\/(?:www\.)?115(?:cdn)?\.com\/s\/([^\/?#]+)(.*)$ oof.disk://openurl/https://115.com/s/$1$2 302

@@ -1,6 +1,8 @@
 #!name=喜马拉雅
 #!desc=解锁 SVIP
 #!system=ios
+#!category=Yanyu宝宝小可爱
+#!icon=https://raw.githubusercontent.com/BABYANYU/Surge/main/assets/yanyu-category.jpg
 
 [Script]
 Ximalaya = type=http-response,pattern=^https?:\/\/.+((ximalaya)|(xmcdn)).+(mobile-user\/v2\/homePage|product\/detail\/v1|v1\/album\/track\/ts|mobile-playpage\/track\/v4\/baseInfo\/ts|mobile-playpage\/playpage\/tabs\/v2|mobile-playpage\/playpage\/track\/qualityAndEffect|mobile\/download\/v2\/track|mobile-user-grade\/decoratorV2\/decorationDetails\/page|mobile-album\/album\/plant\/grass),requires-body=true,max-size=-1,script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/ximalaya.js,script-update-interval=-1

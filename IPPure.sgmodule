@@ -1,6 +1,8 @@
 #!name=IPPure
 #!desc=查看代理入口、落地、原生度与风险值。
 #!system=ios
+#!category=Yanyu宝宝小可爱
+#!icon=https://raw.githubusercontent.com/BABYANYU/Surge/main/assets/yanyu-category.jpg
 
 [Panel]
 IPPure = title="IPPure",content="点击刷新获取当前出口 IP",icon=network,icon-color=#6699FF,script-name=ippure-panel,update-interval=-1

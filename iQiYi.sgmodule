@@ -2,8 +2,9 @@
 #!desc=Remove Ads
 #!system=ios
 #!requirement=CORE_VERSION>=20 && SYSTEM = 'iOS'
-#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/iQiYi_Video.png
 #!openUrl=https://apps.apple.com/app/id1190755526
+#!category=Yanyu宝宝小可爱
+#!icon=https://raw.githubusercontent.com/BABYANYU/Surge/main/assets/yanyu-category.jpg
 
 [Rule]
 IP-CIDR,103.44.59.54/32,REJECT,no-resolve,pre-matching

@@ -3,6 +3,8 @@
 #!system=ios
 #!arguments=Group:Proxy,A_Start_HH:19,A_Start_MM:00,A_Policy,B_Start_HH:23,B_Start_MM:00,B_Policy
 #!arguments-desc=HH 为小时（00–23），MM 为分钟（00–59）。Policy 可填节点、子策略组或 DIRECT，名称必须与 Surge 完全一致。
+#!category=Yanyu宝宝小可爱
+#!icon=https://raw.githubusercontent.com/BABYANYU/Surge/main/assets/yanyu-category.jpg
 
 [Panel]
 Cron = title="Cron",content="点击刷新查看定时切换状态",icon=stopwatch,icon-color=#6699FF,script-name=cron-policy-panel,update-interval=-1

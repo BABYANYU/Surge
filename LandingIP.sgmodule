@@ -1,6 +1,8 @@
 #!name=代理链信息
 #!desc=显示代理策略、入口与落地信息
 #!system=ios
+#!category=Yanyu宝宝小可爱
+#!icon=https://raw.githubusercontent.com/BABYANYU/Surge/main/assets/yanyu-category.jpg
 
 [Panel]
 代理链信息 = title="代理链信息",content="点击刷新查询代理链信息",icon=globe.asia.australia,icon-color=#6699FF,script-name=proxy-chain-panel,update-interval=-1

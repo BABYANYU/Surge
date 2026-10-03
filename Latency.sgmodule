@@ -3,8 +3,6 @@
 #!system=ios
 #!arguments=Group:Proxy
 #!arguments-desc=填写需要检测的策略组名称，名称必须与 Surge 完全一致。
-#!category=Yanyu宝宝小可爱
-#!icon=https://raw.githubusercontent.com/BABYANYU/Surge/main/assets/yanyu-category.jpg
 
 [Panel]
 Latency = title="Latency",content="点击刷新检测 {{{Group}}} 组节点",icon=gauge.with.dots.needle.67percent,icon-color=#6699FF,script-name=latency-panel,update-interval=-1

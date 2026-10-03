@@ -1,5 +1,5 @@
-#!name=爱奇艺去广告
-#!desc=移除开屏、焦点图、瀑布流和搜索广告，关闭青少年弹窗并精简底栏与“我的”页面
+#!name=AQIYI No Ad
+#!desc=Remove Ads
 #!system=ios
 #!requirement=CORE_VERSION>=20 && SYSTEM = 'iOS'
 #!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/iQiYi_Video.png

@@ -10,7 +10,7 @@
 | Latency | 综合延迟与抖动检测 | [安装](https://babyanyu.github.io/Surge/?m=latency) |
 | Cron | 定时自动切换节点 | [安装](https://babyanyu.github.io/Surge/?m=cron) |
 | YouTube Plus | YouTube 去广告与字幕 | [安装](https://babyanyu.github.io/Surge/?m=youtube) |
-| 爱奇艺去广告 | 移除爱奇艺多处广告 | [安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
+| AQIYI No Ad | Remove Ads | [安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
 | 115 分享跳转 | 分享链接唤起客户端 | [安装](https://babyanyu.github.io/Surge/?m=share115) |
 | 喜马拉雅 | 解锁 SVIP | [安装](https://babyanyu.github.io/Surge/?m=ximalaya) |
 | Bilibili 空降助手 | 跳过视频广告片段 | [安装](https://babyanyu.github.io/Surge/?m=bilibili) |
@@ -104,9 +104,9 @@ MITM 覆盖 `*.googlevideo.com`、`www.youtube.com`、`m.youtube.com`、`tv.yout
 
 ---
 
-## <img src="https://api.iconify.design/mdi:movie-open-outline.svg?color=%2334c759" width="24" alt=""> 爱奇艺去广告
+## <img src="https://api.iconify.design/mdi:movie-open-outline.svg?color=%2334c759" width="24" alt=""> AQIYI No Ad
 
-移除开屏、焦点图、瀑布流与搜索广告，关闭青少年弹窗，并精简底栏与「我的」页面。要求 Surge 核心版本不低于 20 且运行于 iOS。
+Remove Ads
 
 ---
 

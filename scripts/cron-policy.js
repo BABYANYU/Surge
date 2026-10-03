@@ -84,7 +84,7 @@ function renderPanel(config) {
   getGroupDetails(config);
 
   $done({
-    title: `Cron · ${fitText(config.group, 18)}`,
+    title: "Cron",
     content: [
       `${formatTime(config.aHour, config.aMinute)}–${formatTime(config.bHour, config.bMinute)}  ${fitText(config.aPolicy, 18)}`,
       "",

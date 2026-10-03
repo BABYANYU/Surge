@@ -1,5 +1,5 @@
 #!name=Latency
-#!desc=指定策略组节点连续测试 5 轮取综合延迟与抖动。综合延迟约为 TCP RTT＋代理握手＋HTTP TTFB；延迟取中位数，抖动取 MAD。
+#!desc=连续测试 5 轮取综合延迟与抖动。综合延迟为 TCP RTT＋代理握手＋HTTP TTFB；延迟取中位数，抖动取 MAD。
 #!system=ios
 #!arguments=Group:Proxy
 #!arguments-desc=填写需要检测的策略组名称，名称必须与 Surge 完全一致。

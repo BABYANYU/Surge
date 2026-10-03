@@ -10,7 +10,7 @@
 | Latency | 综合延迟与抖动检测 | [安装](https://babyanyu.github.io/Surge/?m=latency) |
 | Cron | 定时自动切换节点 | [安装](https://babyanyu.github.io/Surge/?m=cron) |
 | YouTube Plus | YouTube 去广告与字幕 | [安装](https://babyanyu.github.io/Surge/?m=youtube) |
-| AQIYI No Ad | Remove Ads | [安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
+| AQIYI Clean | Remove Ads | [安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
 | 115 分享跳转 | 分享链接唤起客户端 | [安装](https://babyanyu.github.io/Surge/?m=share115) |
 | 喜马拉雅 | 解锁 SVIP | [安装](https://babyanyu.github.io/Surge/?m=ximalaya) |
 | Bilibili 空降助手 | 跳过视频广告片段 | [安装](https://babyanyu.github.io/Surge/?m=bilibili) |
@@ -104,7 +104,7 @@ MITM 覆盖 `*.googlevideo.com`、`www.youtube.com`、`m.youtube.com`、`tv.yout
 
 ---
 
-## <img src="https://api.iconify.design/mdi:movie-open-outline.svg?color=%2334c759" width="24" alt=""> AQIYI No Ad
+## <img src="https://api.iconify.design/mdi:movie-open-outline.svg?color=%2334c759" width="24" alt=""> AQIYI Clean
 
 Remove Ads
 

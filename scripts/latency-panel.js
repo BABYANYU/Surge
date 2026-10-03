@@ -70,7 +70,7 @@ function renderResults(nodes, samples) {
         ? `${row.name}  失败`
         : `${row.name}  ${Math.round(row.latency)} ms｜${formatJitter(row.jitter)} ms`
     )
-    .join("\n");
+    .join("\n\n");
 
   $done({
     title: `Latency · ${GROUP_NAME}`,

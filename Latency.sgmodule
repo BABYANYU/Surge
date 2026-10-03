@@ -1,5 +1,5 @@
 #!name=Latency
-#!desc=Proxy 组节点连续测试 5 轮：综合延迟＝握手耗时＋响应耗时；延迟取中位数，抖动取 MAD。
+#!desc=Proxy 组节点连续测试 5 轮取综合延迟与抖动。综合延迟＝握手耗时＋响应耗时；延迟取中位数，抖动取 MAD。
 #!system=ios
 
 [Panel]

@@ -9,7 +9,7 @@
 | 代理链信息 | 代理策略、入口与落地 | [安装](https://babyanyu.github.io/Surge/?m=landing) |
 | Latency | 综合延迟与抖动检测 | [安装](https://babyanyu.github.io/Surge/?m=latency) |
 | Cron | 定时自动切换节点 | [安装](https://babyanyu.github.io/Surge/?m=cron) |
-| YouTube Plus | YouTube 去广告与字幕 | [安装](https://babyanyu.github.io/Surge/?m=youtube) |
+| YouTube Enhance | YouTube 去广告与功能增强 | [安装](https://babyanyu.github.io/Surge/?m=youtube) |
 | AQIYI Clean | Remove Ads | [安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
 | 115 分享跳转 | 分享链接唤起客户端 | [安装](https://babyanyu.github.io/Surge/?m=share115) |
 | 喜马拉雅 | 解锁 SVIP | [安装](https://babyanyu.github.io/Surge/?m=ximalaya) |
@@ -83,24 +83,22 @@
 
 > 安装后由 Surge 在后台自动拦截与改写，无需手动点击，多数需要开启 MITM。
 
-## <img src="https://api.iconify.design/mdi:youtube.svg?color=%2334c759" width="24" alt=""> YouTube Plus
+## <img src="https://api.iconify.design/mdi:youtube.svg?color=%2334c759" width="24" alt=""> YouTube Enhance
 
-YouTube 去广告、隐藏 Shorts、画中画与后台播放，并为网页端提供双语字幕和 YouTube Music 歌词翻译。
-
-相对上游版本做了两处修正：修复 PiP 重写规则的捕获组，并移除会与主去广告脚本冲突的 Protobuf 字幕响应项。
+基于 gholts 版本，移除 YouTube 广告并启用后台播放、画中画与最高 4 倍速；支持最高画质、Jump Ahead、内容精简和实验性原生下载。
 
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
-| blockUpload | true | 隐藏上传入口 |
-| blockImmersive | true | 隐藏沉浸式音乐入口 |
-| blockShorts | true | 隐藏 Shorts |
-| debug | false | 输出调试日志 |
-| Type | Translate | 字幕类型，`Official` / `Translate` |
-| AutoCC | false | 自动显示翻译字幕 |
-| ShowOnly | false | 仅显示翻译字幕 |
-| Position | Forward | 原字幕位置，`Forward` / `Reverse` |
+| block_upload | true | 隐藏上传入口 |
+| block_shorts | false | 隐藏 Shorts |
+| auto_hd | true | 优先最高画质并阻止自动降画质 |
+| block_games | true | 隐藏 Playables 游戏推荐 |
+| block_vertical_live | false | 隐藏竖屏直播推荐 |
+| jump_ahead | true | 启用 Jump Ahead 并移除推广 |
+| block_store | true | 隐藏商店与购物内容 |
+| native_download | false | 实验性原生下载 |
 
-MITM 覆盖 `*.googlevideo.com`、`www.youtube.com`、`m.youtube.com`、`tv.youtube.com`、`s.youtube.com`、`music.youtube.com`、`youtubei.googleapis.com`。
+MITM 覆盖 `*.googlevideo.com`、`youtubei.googleapis.com` 和 `*.youtube.com`。模块执行代码已完整镜像到本仓库，来源为 gholts 的 YouTube Enhance。
 
 ---
 

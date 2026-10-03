@@ -1,0 +1,9 @@
+#!name=Latency
+#!desc=检测 Proxy 策略组全部节点的综合延迟与抖动；预热 1 轮，正式交错检测 8 轮
+#!system=ios
+
+[Panel]
+Latency = title="延迟检测",content="点击刷新检测 Proxy 组节点",icon=timer,icon-color=#6699FF,script-name=latency-panel,update-interval=-1
+
+[Script]
+latency-panel = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/latency-panel.js,timeout=60,script-update-interval=1

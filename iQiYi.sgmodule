@@ -1,4 +1,4 @@
-#!name=AQIYI No Ad
+#!name=AQIYI Clean
 #!desc=Remove Ads
 #!system=ios
 #!requirement=CORE_VERSION>=20 && SYSTEM = 'iOS'

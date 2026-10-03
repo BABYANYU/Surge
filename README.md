@@ -4,18 +4,18 @@
 
 ## 模块一览
 
-| 模块 | 用途 | 一键安装 |
+| 模块 | 用途 | 安装 |
 | --- | --- | --- |
-| IPPure | 出口 IP 纯净度检测 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FIPPure.sgmodule) |
-| RoutePure | 代理链与落地纯净度 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FRoutePure.sgmodule) |
-| 代理链信息 | 代理策略、入口与落地 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FLandingIP.sgmodule) |
-| Latency | 综合延迟与抖动检测 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FLatency.sgmodule) |
-| Cron | 定时自动切换节点 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FCron.sgmodule) |
-| YouTube Plus | YouTube 去广告与字幕 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FYouTube-Plus.sgmodule) |
-| 爱奇艺去广告 | 移除爱奇艺多处广告 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FiQiYi.sgmodule) |
-| 115 分享跳转 | 分享链接唤起客户端 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2F115Share.sgmodule) |
-| 喜马拉雅 | 解锁 SVIP | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FXimalaya.sgmodule) |
-| Bilibili 空降助手 | 跳过视频广告片段 | [安装](surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2FBABYANYU%2FSurge%2Frefs%2Fheads%2Fmain%2FBilibili%25E7%25A9%25BA%25E9%2599%258D%25E5%258A%25A9%25E6%2589%258B.sgmodule) |
+| IPPure | 出口 IP 纯净度检测 | [一键安装](https://babyanyu.github.io/Surge/?m=ippure) |
+| RoutePure | 代理链与落地纯净度 | [一键安装](https://babyanyu.github.io/Surge/?m=routepure) |
+| 代理链信息 | 代理策略、入口与落地 | [一键安装](https://babyanyu.github.io/Surge/?m=landing) |
+| Latency | 综合延迟与抖动检测 | [一键安装](https://babyanyu.github.io/Surge/?m=latency) |
+| Cron | 定时自动切换节点 | [一键安装](https://babyanyu.github.io/Surge/?m=cron) |
+| YouTube Plus | YouTube 去广告与字幕 | [一键安装](https://babyanyu.github.io/Surge/?m=youtube) |
+| 爱奇艺去广告 | 移除爱奇艺多处广告 | [一键安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
+| 115 分享跳转 | 分享链接唤起客户端 | [一键安装](https://babyanyu.github.io/Surge/?m=share115) |
+| 喜马拉雅 | 解锁 SVIP | [一键安装](https://babyanyu.github.io/Surge/?m=ximalaya) |
+| Bilibili 空降助手 | 跳过视频广告片段 | [一键安装](https://babyanyu.github.io/Surge/?m=bilibili) |
 
 ## 面板模块
 
@@ -124,32 +124,3 @@ MITM 覆盖 `*.googlevideo.com`、`www.youtube.com`、`m.youtube.com`、`tv.yout
 | `scripts/latency-panel.js` | Latency |
 | `scripts/cron-policy.js` | Cron |
 | `scripts/youtube-plus/*.js` | YouTube Plus |
-
-## 安装与更新
-
-安装使用稳定链接，形如：
-
-```text
-https://raw.githubusercontent.com/BABYANYU/Surge/refs/heads/main/<模块名>.sgmodule
-```
-
-更新规则：
-
-| 变更类型 | 生效方式 |
-| --- | --- |
-| 脚本逻辑 | 刷新外部资源，或等自动更新 |
-| 模块名称、描述、参数 | 重新安装模块 |
-| 面板显示 | 点击面板条目重新执行 |
-
-注意不要使用固定 commit 的安装地址，否则会永久锁定在那一版，后续更新不会生效。
-
-## 上游与致谢
-
-| 来源 | 使用部分 |
-| --- | --- |
-| [gogrhw/surge](https://github.com/gogrhw/surge) | YouTube Plus 脚本，取自 `Scripts/` |
-| [kokoryh/Sparkle](https://github.com/kokoryh/Sparkle) | Bilibili 空降助手脚本 |
-| [WeiGiegie/666](https://github.com/WeiGiegie/666) | 喜马拉雅脚本 |
-| [luestr/IconResource](https://github.com/luestr/IconResource) | 爱奇艺模块图标 |
-
-YouTube Plus 脚本在本地未做代码改动，仅修正模块层的重写规则与响应处理冲突，原作者署名保留在模块元数据中。

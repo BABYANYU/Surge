@@ -1,7 +1,7 @@
 #!name=Cron
 #!desc=定时自动切换节点
 #!system=ios
-#!arguments=Group:AI,A_Start_HH:20,A_Start_MM:30,A_Policy:香港 A,B_Start_HH:22,B_Start_MM:30,B_Policy:香港 B
+#!arguments=Group:Proxy,A_Start_HH:19,A_Start_MM:00,A_Policy:,B_Start_HH:23,B_Start_MM:00,B_Policy:
 #!arguments-desc=HH 为小时（00–23），MM 为分钟（00–59）。Policy 可填节点、子策略组或 DIRECT，名称必须与 Surge 完全一致。
 
 [Panel]

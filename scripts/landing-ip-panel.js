@@ -41,7 +41,7 @@ async function main() {
   );
 
   $done({
-    title: `Route：${fitText(policy, 24)}`,
+    title: `Proxy Route：${fitText(policy, 24)}`,
     content: lines.join("\n"),
     icon: PANEL.icon,
     "icon-color": PANEL.color,
@@ -315,7 +315,7 @@ function clean(value) {
 
 function finishError(message) {
   $done({
-    title: "代理链信息",
+    title: "Proxy Route",
     content: `${message}\n\n请稍后点击面板重试`,
     icon: "exclamationmark.triangle.fill",
     "icon-color": "#FF453A",

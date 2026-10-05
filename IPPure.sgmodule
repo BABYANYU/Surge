@@ -1,5 +1,5 @@
 #!name=IPPure
-#!desc=查看代理入口、落地、原生度与风险值。
+#!desc=查看代理 IP、服务商、原生度与风险值
 #!system=ios
 
 [Panel]

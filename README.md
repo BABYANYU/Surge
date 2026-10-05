@@ -5,8 +5,7 @@
 | 模块 | 用途 | 安装 |
 | --- | --- | --- |
 | IPPure | 查看代理 IP、服务商、原生度与风险值 | [安装](https://babyanyu.github.io/Surge/?m=ippure) |
-| RoutePure | 代理链与落地纯净度 | [安装](https://babyanyu.github.io/Surge/?m=routepure) |
-| Route | 代理入口与落地信息 | [安装](https://babyanyu.github.io/Surge/?m=landing) |
+| Route | 查看代理入口与落地的 IP、运营商、位置 | [安装](https://babyanyu.github.io/Surge/?m=landing) |
 | Latency | 综合延迟与抖动检测 | [安装](https://babyanyu.github.io/Surge/?m=latency) |
 | Cron | 定时自动切换节点 | [安装](https://babyanyu.github.io/Surge/?m=cron) |
 | YouTube Enhance | YouTube 去广告与功能增强 | [安装](https://babyanyu.github.io/Surge/?m=youtube) |
@@ -31,15 +30,9 @@
 
 ---
 
-## <img src="https://api.iconify.design/mdi:routes.svg?color=%236699ff" width="24" alt=""> RoutePure
-
-在 IPPure 基础上合并代理链信息：展示代理策略、入口、落地，并在落地信息下方追加原生状态与风险值。Route 与 IPPure 模块可同时保留，互不影响。
-
----
-
 ## <img src="https://api.iconify.design/mdi:transit-connection-variant.svg?color=%236699ff" width="24" alt=""> Route
 
-查看代理入口 IP、运营商和位置，以及落地 IP、服务商和位置，不查询纯净度，请求更轻。
+查看代理入口与落地的 IP、运营商和位置信息，不查询纯净度，请求更轻。
 
 ---
 

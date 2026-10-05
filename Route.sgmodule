@@ -1,5 +1,5 @@
 #!name=Route
-#!desc=查看代理入口 IP、运营商、位置、落地 IP、服务商、位置
+#!desc=查看代理入口与落地的 IP、运营商、位置
 #!system=ios
 
 [Panel]

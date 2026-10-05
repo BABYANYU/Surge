@@ -1,0 +1,9 @@
+#!name=Route
+#!desc=查看代理入口 IP、运营商、位置、落地 IP、服务商、位置
+#!system=ios
+
+[Panel]
+Route = title="Route",content="点击刷新查询代理入口与落地信息",icon=globe.asia.australia,icon-color=#6699FF,script-name=proxy-chain-panel,update-interval=-1
+
+[Script]
+proxy-chain-panel = type=generic,timeout=15,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/landing-ip-panel.js,script-update-interval=1

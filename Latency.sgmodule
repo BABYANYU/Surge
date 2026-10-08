@@ -1,11 +1,11 @@
-#!name=Latency
-#!desc=连续测试 5 轮取综合延迟与抖动。综合延迟为 TCP RTT＋代理握手＋TLS 握手＋HTTPS TTFB；延迟取中位数，抖动取 MAD。
+#!name=HTTPS
+#!desc=通过节点完成 5 轮 HTTPS HEAD 请求，综合延迟取 Surge 返回的端到端总耗时中位数，抖动取 MAD。
 #!system=ios
 #!arguments=Group:Proxy
 #!arguments-desc=填写需要检测的策略组名称，名称必须与 Surge 完全一致。
 
 [Panel]
-Latency = title="HTTPS",content="点击刷新检测 {{{Group}}} 组节点",icon=gauge.with.dots.needle.67percent,icon-color=#6699FF,script-name=latency-panel,update-interval=-1
+HTTPS = title="HTTPS",content="点击刷新检测 {{{Group}}} 组节点",icon=gauge.with.dots.needle.67percent,icon-color=#6699FF,script-name=latency-panel,update-interval=-1
 
 [Script]
 latency-panel = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/main/scripts/latency-panel.js,timeout=60,script-update-interval=1,argument="{{{Group}}}"

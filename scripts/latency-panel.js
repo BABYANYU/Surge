@@ -1,6 +1,6 @@
 // Policy group latency panel
 const GROUP_NAME = String(typeof $argument === "undefined" ? "" : $argument).trim() || "Proxy";
-const TEST_URL = "http://cp.cloudflare.com/generate_204";
+const TEST_URL = "https://cp.cloudflare.com/generate_204";
 const TEST_ROUNDS = 5;
 
 getGroupNodes((error, nodes) => {
@@ -73,7 +73,7 @@ function renderResults(nodes, samples) {
     .join("\n\n");
 
   $done({
-    title: "Latency",
+    title: "HTTPS",
     content,
     icon: "gauge.with.dots.needle.67percent",
     "icon-color": "#6699FF",
@@ -82,7 +82,7 @@ function renderResults(nodes, samples) {
 
 function renderError(message) {
   $done({
-    title: "Latency",
+    title: "HTTPS",
     content: `${message}\n请稍后点击面板重试`,
     icon: "gauge.with.dots.needle.67percent",
     "icon-color": "#6699FF",

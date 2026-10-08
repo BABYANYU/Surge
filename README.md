@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | IPPure | 查看代理 IP、服务商、原生度与风险值 | [安装](https://babyanyu.github.io/Surge/?m=ippure) |
 | Route | 查看代理入口与落地的 IP、运营商、位置 | [安装](https://babyanyu.github.io/Surge/?m=landing) |
-| Latency | 综合延迟与抖动检测 | [安装](https://babyanyu.github.io/Surge/?m=latency) |
+| HTTPS | HTTPS 综合延迟与抖动检测 | [安装](https://babyanyu.github.io/Surge/?m=latency) |
 | Cron | 定时自动切换节点 | [安装](https://babyanyu.github.io/Surge/?m=cron) |
 | YouTube Enhance | YouTube 去广告与功能增强 | [安装](https://babyanyu.github.io/Surge/?m=youtube) |
 | AQIYI Clean | Remove Ads | [安装](https://babyanyu.github.io/Surge/?m=iqiyi) |
@@ -36,11 +36,11 @@
 
 ---
 
-## <img src="https://api.iconify.design/mdi:speedometer.svg?color=%236699ff" width="24" alt=""> Latency
+## <img src="https://api.iconify.design/mdi:speedometer.svg?color=%236699ff" width="24" alt=""> HTTPS
 
-对指定策略组的全部节点连续测试 5 轮，输出综合延迟与抖动两列。
+对指定策略组的全部节点连续执行 5 轮 HTTPS 测试，输出综合延迟与抖动两列。
 
-- 综合延迟 = TCP RTT + 代理协议握手 + HTTP 首字节时间，取中位数。
+- 综合延迟 = TCP RTT + 代理协议握手 + TLS 握手 + HTTPS 首字节时间，取中位数。
 - 抖动取 MAD（中位绝对偏差），比标准差更抗尖峰干扰。
 - 每轮由 Surge 同批并发检测全部节点，节点之间条件一致。
 - 失败不计为高延迟，改为显示成功轮数。

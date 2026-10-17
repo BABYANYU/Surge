@@ -1,0 +1,12 @@
+#!name=丰巢小程序广告精简（待实机验证）
+#!desc=仅拦截已证实的 DSP 广告检索接口，并移除首页聚合中的明确广告模块。开屏覆盖未确认；不修改登录、取寄件、会员权益与支付接口。
+#!system=ios
+
+[URL Rewrite]
+^https://dsp\.fcbox\.com/adSearch/(get|getMulti)(\?|$) _ reject
+
+[Script]
+Fengchao-Confirmed-Ads = type=http-response,pattern=^https://webchatapp\.fcbox\.com/fcboxactivityweb/api/v2/clientPage/modulesAggregated(\?|$),requires-body=true,max-size=262144,timeout=5,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/refs/heads/main/scripts/fengchao.js
+
+[MITM]
+hostname = %APPEND% dsp.fcbox.com, webchatapp.fcbox.com

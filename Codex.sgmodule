@@ -7,4 +7,4 @@
 Codex = title="Codex",content="请在模块设置填写 AccessToken / AccountId，点击刷新",icon=terminal,icon-color=#8EAFE0,script-name=codex-panel,update-interval=-1
 
 [Script]
-codex-panel = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/refs/heads/main/scripts/codex-panel.js,timeout=15,script-update-interval=1,argument="AccessToken={{{AccessToken}}}&AccountId={{{AccountId}}}&Policy={{{Policy}}}"
+codex-panel = type=generic,script-path=https://raw.githubusercontent.com/BABYANYU/Surge/refs/heads/main/scripts/codex-panel.js?v=20261018-layout2,timeout=15,script-update-interval=1,argument="AccessToken={{{AccessToken}}}&AccountId={{{AccountId}}}&Policy={{{Policy}}}"

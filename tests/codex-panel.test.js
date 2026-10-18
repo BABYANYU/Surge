@@ -39,13 +39,14 @@ function run(options = {}) {
   return { result: results[0], requests, context };
 }
 const ok = run({ twice: true });
-assert.match(ok.result.content, /5 小时额度\n已用 25.5%  ·  剩余 74.5%/);
-assert.match(ok.result.content, /7 天额度\n已用 40%/);
-assert.match(ok.result.content, /重置 \d\d\/\d\d \d\d:\d\d/);
+assert.match(ok.result.content, /5 小时剩余：74.5%/);
+assert.match(ok.result.content, /本周剩余：60%/);
+assert.match(ok.result.content, /重置时间：\d\d\/\d\d \d\d:\d\d/);
 assert.equal(ok.result.title, 'Codex');
-assert.equal(ok.result.icon, 'terminal');
-assert.equal(ok.result['icon-color'], '#8EAFE0');
-assert.ok(!/[■□]/.test(ok.result.content));
+assert.equal(ok.result.icon, 'bolt.circle.fill');
+assert.equal(ok.result['icon-color'], '#6699FF');
+assert.ok(!/[■□]|已用/.test(ok.result.content));
+assert.equal(ok.result.content.split('\n').length, 5);
 assert.equal(ok.requests.length, 1);
 const request = ok.requests[0];
 assert.equal(request.url, 'https://chatgpt.com/backend-api/wham/usage');
@@ -117,15 +118,15 @@ if (process.argv[2]) {
 const explodingResponse = { get status() { throw Error('synthetic hidden response'); } };
 assert.match(run({ response: explodingResponse }).result.content, /未获取有效额度/);
 const noReset = data(); noReset.rate_limit.primary_window.reset_at = null;
-assert.match(run({ body: JSON.stringify(noReset) }).result.content, /重置时间未返回/);
+assert.match(run({ body: JSON.stringify(noReset) }).result.content, /重置时间：未返回/);
 for (const w of [null, [], 'invalid']) {
   const d = data(); d.rate_limit.primary_window = w;
   assert.equal(parse(d).windows.length, 1); cases++;
 }
 const full = data(); full.rate_limit.primary_window.used_percent = 100;
-assert.match(run({ body: JSON.stringify(full) }).result.content, /已用 100%  ·  剩余 0%/);
+assert.match(run({ body: JSON.stringify(full) }).result.content, /5 小时剩余：0%/);
 const empty = data(); empty.rate_limit.primary_window.used_percent = 0;
-assert.match(run({ body: JSON.stringify(empty) }).result.content, /已用 0%  ·  剩余 100%/);
+assert.match(run({ body: JSON.stringify(empty) }).result.content, /5 小时剩余：100%/);
 const installHTML = fs.readFileSync(path.join(__dirname, '../docs/index.html'), 'utf8');
 let redirected;
 const elements = {};

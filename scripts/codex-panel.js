@@ -101,12 +101,12 @@ function localTime(ms, seconds = false) {
   return `${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}${seconds ? ':' + pad(d.getSeconds()) : ''}`;
 }
 function render(state) {
-  const base = { title: 'Codex', icon: 'terminal', 'icon-color': '#8EAFE0' };
+  const base = { title: 'Codex', icon: 'bolt.circle.fill', 'icon-color': '#6699FF' };
   if (state.error) return { ...base, style: 'error', content: `${state.error}\n${state.detail}` };
   const windows = state.windows || [];
   const section = w => {
     const remaining = Number((100 - w.used).toFixed(1));
-    return `${w.seconds === 18000 ? '5 小时额度' : '7 天额度'}\n已用 ${w.used}%  ·  剩余 ${remaining}%\n${w.reset === null ? '重置时间未返回' : `重置 ${localTime(w.reset)}`}`;
+    return `${w.seconds === 18000 ? '5 小时剩余' : '本周剩余'}：${remaining}%\n${w.reset === null ? '重置时间：未返回' : `重置时间：${localTime(w.reset)}`}`;
   };
   return { ...base, content: windows.length ? windows.map(section).join('\n\n') : '未返回 5 小时 / 周额度窗口' };
 }

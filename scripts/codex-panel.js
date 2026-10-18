@@ -101,13 +101,12 @@ function localTime(ms, seconds = false) {
   return `${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}${seconds ? ':' + pad(d.getSeconds()) : ''}`;
 }
 function render(state) {
-  const base = { title: 'Yanyu · Codex', icon: 'chart.bar.fill', 'icon-color': '#8EAFE0' };
+  const base = { title: 'Codex', icon: 'terminal', 'icon-color': '#8EAFE0' };
   if (state.error) return { ...base, style: 'error', content: `${state.error}\n${state.detail}` };
   const windows = state.windows || [];
   const section = w => {
-    const filled = Math.round(w.used / 10);
-    const bar = '■'.repeat(filled) + '□'.repeat(10 - filled);
-    return `${w.seconds === 18000 ? '5h' : '7d'} 已用 ${w.used}%\n${bar}  剩余 ${Number((100 - w.used).toFixed(1))}%\n${w.reset === null ? '重置时间未返回' : `重置 ${localTime(w.reset)}`}`;
+    const remaining = Number((100 - w.used).toFixed(1));
+    return `${w.seconds === 18000 ? '5 小时额度' : '7 天额度'}\n已用 ${w.used}%  ·  剩余 ${remaining}%\n${w.reset === null ? '重置时间未返回' : `重置 ${localTime(w.reset)}`}`;
   };
-  return { ...base, content: windows.length ? windows.map(section).join('\n\n') : '未返回 5h / 7d 窗口' };
+  return { ...base, content: windows.length ? windows.map(section).join('\n\n') : '未返回 5 小时 / 周额度窗口' };
 }

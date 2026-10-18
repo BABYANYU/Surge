@@ -32,7 +32,7 @@ Surge 的 `{{{参数}}}` 是**应用模块前原样替换配置文本**，官方
 - 一次只读 GET `https://chatgpt.com/backend-api/wham/usage`，使用 `$httpClient.get` 官方 `policy`，请求超时 10 秒、脚本超时 15 秒；禁用自动重定向与 cookie。12 秒补偿计时器确保没有回调时仍返回失败面板。
 - 仅解析顶层 `rate_limit`，按 `limit_window_seconds` 识别 18000 秒（5h）与 604800 秒（7d），不按 primary/secondary 的位置猜测窗口，也不混入代码审查或模型额外额度。
 - 原样保留有效 `used_percent`，剩余为 `100 - used_percent`（最多一位小数）；`reset_at` 为 Unix 秒，显示本地 `MM/DD HH:mm`，未提供时明确提示。不从当前时间推算重置、不显示旧数据为新额度。
-- Surge 官方 generic Panel 返回 `title` / `content` / `style` / 图标字段，不支持 Egern 的富组件树、HTML、SVG 进度条或桌面/锁屏 widget 布局。因此这里是**文本面板**：以 10 格 `■` / `□` 近似表示已用进度（每格 10%，四舍五入），精确百分比另行显示。保留标题、5h/7d 已用、剩余及重置信息，但不是视觉一比一复刻。
+- Surge 官方 generic Panel 返回 `title` / `content` / `style` / 图标字段，不支持 Egern 的富组件树、HTML、SVG 进度条或桌面/锁屏 widget 布局。因此这里是**文本面板**：标题为 `Codex`，使用 `terminal` 图标及统一颜色 `#8EAFE0`；5 小时与 7 天额度分段显示已用、剩余及重置时间，不显示进度条。
 - 401 提示更新令牌，403 提示检查账户/访问限制，429 提示稍后重试（不解释为 Codex 额度耗尽）。网络、超时、无效状态、JSON/结构错误均安全返回失败面板，不输出服务端正文。
 - Surge 自身会缓存上次返回面板，未点击刷新时可能仍显示之前结果；下一次执行无论成功失败都会返回新面板，不把旧值伪装成实时查询。
 

@@ -12,7 +12,7 @@
 | `AccountId` | 与令牌匹配的 ChatGPT 账户/工作区 ID；不是用户 ID、邮箱或 API 组织密钥。 |
 | `Policy` | 已有的 Surge 策略或策略组名，默认为 `Proxy`；空值也回退到 `Proxy`。不自动创建或切换策略组。 |
 
-安装启用后在策略选择页查看面板，点击卡片刷新查询最新额度。`update-interval=-1` 关闭面板自动刷新，不后台轮询，不需要 MITM。模块订阅 URL、面板标识与脚本 URL 保持稳定；沿用 IPPure、Route、HTTPS 的配置：`update-interval=-1`，`script-update-interval=1`。脚本更新间隔不代表每秒查询额度。更新模块获取新版配置；查询实时额度仍由面板刷新触发。
+安装启用后在策略选择页查看面板，点击卡片刷新查询最新额度。`update-interval=-1` 关闭面板自动刷新，不后台轮询，不需要 MITM。模块订阅 URL 与面板标识保持稳定；脚本发布时在内部 URL 附加基于脚本内容的版本参数，避免手机继续执行旧缓存，无需用户更换模块链接；沿用 IPPure、Route、HTTPS 的配置：`update-interval=-1`，`script-update-interval=1`。脚本更新间隔不代表每秒查询额度。更新模块获取新版配置；查询实时额度仍由面板刷新触发。
 
 ### 参数编码与保密
 

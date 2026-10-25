@@ -1,9 +1,5 @@
 #!name=美团
 #!desc=去广告
-#!author=TG@ZenMoFiShi
-# 上游来源：https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.snippet
-# 更新时间：2026-10-25 17:32:01（北京时间）
-# 规则总数：43（拦截规则 35，脚本 8）
 
 [Rule]
 DOMAIN,shark-mt.meituan.com,REJECT,extended-matching

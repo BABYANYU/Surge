@@ -12,4 +12,3 @@
 | **Bilibili 空降助手** | 跳过视频内广告片段 | [添加](https://babyanyu.github.io/Surge/?m=bilibili) | [查看](./Bilibili空降助手.sgmodule) |
 | **喜马拉雅** | SVIP 相关响应改写与广告请求拦截 | [添加](https://babyanyu.github.io/Surge/?m=ximalaya) | [查看](./Ximalaya.sgmodule) |
 | **115 分享跳转** | 从分享链接直接唤起 115 客户端 | [添加](https://babyanyu.github.io/Surge/?m=share115) | [查看](./115Share.sgmodule) |
-| **美团App 精简** | 网络端点拦截、推荐及广告区域精简；[适配说明](./docs/meituan.md) | [添加](https://babyanyu.github.io/Surge/?m=meituan) | [查看](./Meituan.sgmodule) |

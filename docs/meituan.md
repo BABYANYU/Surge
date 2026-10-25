@@ -10,7 +10,7 @@
 
 ## 功能与保守处理
 
-- 保留 35 条网络规则：域名、通配域名及 IPv4/IPv6；未额外添加 `no-resolve`。拦截可能影响连接方式或部分业务，异常时请停用模块排查。
+- 保留 35 条网络规则：域名、通配域名及 IPv4/IPv6；24 条 IP 拦截规则添加 `no-resolve`，只匹配已有真实地址，不为匹配这些拦截规则主动解析域名，避免模块前置 IP 规则引发 Surge DNS 警告。未修改用户的 GEOIP 国内直连规则。拦截可能影响连接方式或部分业务，异常时请停用模块排查。
 - 保留 8 组响应匹配与 5 个 MITM 域名。需用户自行在 Surge 配置 MITM 及信任证书；仅安装模块并不能保证 HTTPS 响应可改写。
 - 底栏：仅当 `data.resource.tabArea` 同时含 `homepage`、`mine` 时删除 `video`、`xiaotuan`，保留其他项目。
 - 推荐流：仅处理 `gwc_feed1_2265`、`personalcenter_2154`，清空 `data`，设置 `bottom=true`、`ext.forbidByExp=true`。

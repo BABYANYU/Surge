@@ -1,5 +1,5 @@
-#!name=美团App 精简
-#!desc=网络端点拦截与首页、推荐、搜索、购物车及开屏响应精简；需开启 MITM，兼容性待真机验证。
+#!name=美团
+#!desc=全局去广告
 
 [Rule]
 DOMAIN,shark-mt.meituan.com,REJECT

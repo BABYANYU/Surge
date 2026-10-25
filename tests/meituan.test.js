@@ -80,4 +80,16 @@ moduleText.split("\n").filter(line => line.includes("type=http-response")).forEa
   same(new RegExp(pattern).test(urls[index]), true);
   same(line.includes("max-size=2097152"), true);
 });
+// Immutable script URLs bind all routes to one published script version.
+const scriptPaths = [...moduleText.matchAll(/script-path=([^,\s]+)/g)].map(match => match[1]);
+same(scriptPaths.length, 8);
+same(new Set(scriptPaths).size, 1);
+same(/^https:\/\/raw\.githubusercontent\.com\/BABYANYU\/Surge\/[a-f0-9]{40}\/scripts\/meituan\.js$/.test(scriptPaths[0]), true);
+const scriptCommit = scriptPaths[0].split("/")[5];
+const pinnedCode = require("node:child_process").execFileSync("git", ["show", `${scriptCommit}:scripts/meituan.js`], {
+  cwd: require("node:path").join(__dirname, ".."), encoding: "utf8", maxBuffer: 4 * 1024 * 1024
+});
+same(pinnedCode, code);
+// Do not silently introduce unverified module metadata or inline/data URI scripts.
+same(/^#!update-interval=/m.test(moduleText), false);
 console.log(`${count} assertions passed; all 8 response routes covered (synthetic only).`);

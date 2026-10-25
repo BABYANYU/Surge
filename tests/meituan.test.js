@@ -74,7 +74,10 @@ const moduleText = fs.readFileSync(require("node:path").join(__dirname, "../Meit
 same(moduleText.split("\n").filter(line => /^(DOMAIN|IP-CIDR)/.test(line)).length, 35);
 same(moduleText.split("\n").filter(line => line.includes("type=http-response")).length, 8);
 same(moduleText.split("hostname = %APPEND% ")[1].trim().split(", ").length, 5);
-same(/no-resolve|ZenmoFeiShi|ZenMoFiShi|TG@/.test(moduleText + code), false);
+same(/ZenmoFeiShi|ZenMoFiShi|TG@/.test(moduleText + code), false);
+const ipRules = moduleText.split("\n").filter(line => /^IP-CIDR6?,/.test(line));
+same(ipRules.length, 24);
+same(ipRules.every(line => line.endsWith(",REJECT,no-resolve")), true);
 moduleText.split("\n").filter(line => line.includes("type=http-response")).forEach((line, index) => {
   const pattern = line.split("pattern=")[1].split(",requires-body")[0];
   same(new RegExp(pattern).test(urls[index]), true);

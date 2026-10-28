@@ -96,17 +96,36 @@ function parseUsage(d) {
   const plans = { plus: 'Plus', pro: 'Pro', free: 'Free', team: 'Team', business: 'Business', enterprise: 'Enterprise', edu: 'Edu' };
   return { plan: plans[d.plan_type] || '其他套餐', windows };
 }
-function localTime(ms, seconds = false) {
-  const d = new Date(ms), pad = v => String(v).padStart(2, '0');
-  return `${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}${seconds ? ':' + pad(d.getSeconds()) : ''}`;
+// Relative times are a snapshot at manual refresh, not a live timer.
+function resetCountdown(reset, windowSeconds, now = Date.now()) {
+  if (reset === null) return '重置时间未返回';
+  const delta = reset - now;
+  if (delta <= 0) return '重置时间已到，请刷新';
+  if (windowSeconds === 604800) {
+    const totalHours = Math.floor(delta / 3600000);
+    if (totalHours === 0) return '不足 1 小时后重置';
+    const days = Math.floor(totalHours / 24), hours = totalHours % 24;
+    const parts = [];
+    if (days) parts.push(`${days} 天`);
+    if (hours) parts.push(`${hours} 小时`);
+    return `${parts.join(' ')}后重置`;
+  }
+  if (delta < 60000) return '不足 1 分钟后重置';
+  const totalMinutes = Math.ceil(delta / 60000);
+  const hours = Math.floor(totalMinutes / 60), minutes = totalMinutes % 60;
+  const parts = [];
+  if (hours) parts.push(`${hours} 小时`);
+  if (minutes) parts.push(`${minutes} 分钟`);
+  return `${parts.join(' ')}后重置`;
 }
 function render(state) {
   const base = { title: 'Codex', icon: 'bolt.circle.fill', 'icon-color': '#6699FF' };
   if (state.error) return { ...base, style: 'error', content: `${state.error}\n${state.detail}` };
   const windows = state.windows || [];
+  const now = Number.isFinite(state.queriedAt) ? state.queriedAt : Date.now();
   const section = w => {
     const remaining = Number((100 - w.used).toFixed(1));
-    return `${w.seconds === 18000 ? '5 小时剩余' : '本周剩余'}：${remaining}%\n${w.reset === null ? '重置时间：未返回' : `重置时间：${localTime(w.reset)}`}`;
+    return `${w.seconds === 18000 ? '5 小时额度' : '每周额度'} · 剩余 ${remaining}%\n${resetCountdown(w.reset, w.seconds, now)}`;
   };
   return { ...base, content: windows.length ? windows.map(section).join('\n\n') : '未返回 5 小时 / 周额度窗口' };
 }

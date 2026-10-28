@@ -39,9 +39,9 @@ function run(options = {}) {
   return { result: results[0], requests, context };
 }
 const ok = run({ twice: true });
-assert.match(ok.result.content, /5 小时剩余：74.5%/);
-assert.match(ok.result.content, /本周剩余：60%/);
-assert.match(ok.result.content, /重置时间：\d\d\/\d\d \d\d:\d\d/);
+assert.match(ok.result.content, /5 小时额度 · 剩余 74.5%/);
+assert.match(ok.result.content, /每周额度 · 剩余 60%/);
+assert.match(ok.result.content, /(?:后重置|重置时间已到，请刷新)/);
 assert.equal(ok.result.title, 'Codex');
 assert.equal(ok.result.icon, 'bolt.circle.fill');
 assert.equal(ok.result['icon-color'], '#6699FF');
@@ -118,15 +118,15 @@ if (process.argv[2]) {
 const explodingResponse = { get status() { throw Error('synthetic hidden response'); } };
 assert.match(run({ response: explodingResponse }).result.content, /未获取有效额度/);
 const noReset = data(); noReset.rate_limit.primary_window.reset_at = null;
-assert.match(run({ body: JSON.stringify(noReset) }).result.content, /重置时间：未返回/);
+assert.match(run({ body: JSON.stringify(noReset) }).result.content, /重置时间未返回/);
 for (const w of [null, [], 'invalid']) {
   const d = data(); d.rate_limit.primary_window = w;
   assert.equal(parse(d).windows.length, 1); cases++;
 }
 const full = data(); full.rate_limit.primary_window.used_percent = 100;
-assert.match(run({ body: JSON.stringify(full) }).result.content, /5 小时剩余：0%/);
+assert.match(run({ body: JSON.stringify(full) }).result.content, /5 小时额度 · 剩余 0%/);
 const empty = data(); empty.rate_limit.primary_window.used_percent = 0;
-assert.match(run({ body: JSON.stringify(empty) }).result.content, /5 小时剩余：100%/);
+assert.match(run({ body: JSON.stringify(empty) }).result.content, /5 小时额度 · 剩余 100%/);
 const installHTML = fs.readFileSync(path.join(__dirname, '../docs/index.html'), 'utf8');
 let redirected;
 const elements = {};
@@ -139,4 +139,33 @@ const moduleText = fs.readFileSync(path.join(__dirname, '../Codex.sgmodule'), 'u
 assert.match(moduleText, /#!arguments=AccessToken,AccountId,Policy:Proxy/);
 assert.match(moduleText, /refs\/heads\/main\/scripts\/codex-panel\.js/);
 assert.ok(!/\beval\s*\(|new Function|console\.|\$persistentStore|ctx\.http/.test(source));
+
+const referenceTime = 1800000000000;
+const countdown = (delta, seconds = 18000) =>
+  ok.context.resetCountdown(referenceTime + delta, seconds, referenceTime);
+for (const [delta, seconds, expected] of [
+  [4140000, 18000, '1 小时 9 分钟后重置'],
+  [18000000, 18000, '5 小时后重置'],
+  [60000, 18000, '1 分钟后重置'],
+  [60001, 18000, '2 分钟后重置'],
+  [1, 18000, '不足 1 分钟后重置'],
+  [59999, 18000, '不足 1 分钟后重置'],
+  [0, 18000, '重置时间已到，请刷新'],
+  [-1, 604800, '重置时间已到，请刷新'],
+  [(5 * 24 + 3) * 3600000 + 22 * 60000, 604800, '5 天 3 小时后重置'],
+  [7 * 86400000, 604800, '7 天后重置'],
+  [86400000, 604800, '1 天后重置'],
+  [3600000, 604800, '1 小时后重置'],
+  [3599999, 604800, '不足 1 小时后重置']
+]) { assert.equal(countdown(delta, seconds), expected); cases++; }
+assert.equal(ok.context.resetCountdown(null, 18000, referenceTime), '重置时间未返回'); cases++;
+const samplePanel = ok.context.render({ queriedAt: referenceTime, windows: [
+  { seconds: 18000, used: 42, reset: referenceTime + 4140000 },
+  { seconds: 604800, used: 76, reset: referenceTime + (5 * 24 + 3) * 3600000 + 22 * 60000 }
+] });
+assert.equal(samplePanel.content, '5 小时额度 · 剩余 58%\n1 小时 9 分钟后重置\n\n每周额度 · 剩余 24%\n5 天 3 小时后重置'); cases++;
+assert.match(moduleText, /update-interval=-1/);
+assert.match(moduleText, /icon=bolt.circle.fill,icon-color=#6699FF/);
+assert.ok(moduleText.includes('codex-panel.js?v='));
+
 console.log(`PASS: ${cases} synthetic cases; no live credentials or network; exactly-once completion and safe output verified.`);

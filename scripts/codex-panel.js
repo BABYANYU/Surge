@@ -18,7 +18,7 @@
       return done({ error: '授权参数格式无效', detail: '参数须按说明百分号编码；不含引号、换行或额外分隔符' });
     }
     const token = clean(config.AccessToken), account = clean(config.AccountId);
-    const policy = clean(config.Policy) || 'Proxy';
+    const policy = clean(config.Policy) || 'AI';
     if (!token || !account) return done({ error: '待授权', detail: '请在模块设置填写 AccessToken / AccountId' });
     if (!/^[A-Za-z0-9._~+/=-]+$/.test(token) || !/^[A-Za-z0-9_-]+$/.test(account))
       return done({ error: '授权参数格式无效', detail: '仅填 access_token 本身及账户 ID，不含 Bearer 前缀' });

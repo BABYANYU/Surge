@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const path = require('node:path');
 const source = fs.readFileSync(path.join(__dirname, '../scripts/codex-panel.js'), 'utf8');
 const markerToken = 'synthetic-token', markerAccount = 'synthetic-account';
-const config = (t = markerToken, a = markerAccount, p = 'Proxy') =>
+const config = (t = markerToken, a = markerAccount, p = 'AI') =>
   `AccessToken=${encodeURIComponent(t)}&AccountId=${encodeURIComponent(a)}&Policy=${encodeURIComponent(p)}`;
 const window = (seconds = 18000, used = 25.5, reset = 1800000000) =>
   ({ limit_window_seconds: seconds, used_percent: used, reset_at: reset });
@@ -50,11 +50,12 @@ assert.equal(ok.result.content.split('\n').length, 5);
 assert.equal(ok.requests.length, 1);
 const request = ok.requests[0];
 assert.equal(request.url, 'https://chatgpt.com/backend-api/wham/usage');
-assert.equal(request.policy, 'Proxy'); assert.equal(request.timeout, 10);
+assert.equal(run({ arg: config(markerToken, markerAccount, 'Proxy') }).requests[0].policy, 'Proxy');
+assert.equal(request.policy, 'AI'); assert.equal(request.timeout, 10);
 assert.equal(request['auto-redirect'], false); assert.equal(request['auto-cookie'], false);
 assert.equal(request.headers.Authorization, `Bearer ${markerToken}`);
 assert.equal(request.headers['ChatGPT-Account-Id'], markerAccount);
-assert.equal(run({ arg: config(markerToken, markerAccount, '') }).requests[0].policy, 'Proxy');
+assert.equal(run({ arg: config(markerToken, markerAccount, '') }).requests[0].policy, 'AI');
 assert.equal(run({ arg: config(markerToken, markerAccount, '代理 "A",B&c=1%') }).requests[0].policy, '代理 "A",B&c=1%');
 for (const arg of ['', undefined, config('', ''), config('', markerAccount), config(markerToken, '')]) {
   const r = run({ arg }); assert.match(r.result.content, /待授权/); assert.equal(r.requests.length, 0);
@@ -62,8 +63,8 @@ for (const arg of ['', undefined, config('', ''), config('', markerAccount), con
 for (const arg of [config('Bearer synthetic', markerAccount), config(markerToken, 'bad@id'),
   config('line\nbreak', markerAccount), config(markerToken, markerAccount, '\r\ninjected'),
   'AccessToken=x&AccountId=y', config() + '&Policy=evil', config() + '&extra=1',
-  config() + '"', config().replace('Proxy', '%GG'), config().replace('Proxy', '%E0%A4'),
-  config().replace('Proxy', 'raw space'), config().replace('Proxy', '{{{Policy}}}')]) {
+  config() + '"', config().replace('AI', '%GG'), config().replace('AI', '%E0%A4'),
+  config().replace('AI', 'raw space'), config().replace('AI', '{{{Policy}}}')]) {
   const r = run({ arg }); assert.match(r.result.content, /授权参数格式无效/); assert.equal(r.requests.length, 0);
 }
 assert.equal(run({ arg: config('synthetic+/=token', markerAccount) }).requests.length, 1);
@@ -136,8 +137,8 @@ vm.runInNewContext(installHTML.match(/<script>([\s\S]*?)<\/script>/)[1], {
 });
 assert.equal(redirected, 'surge:///install-module?url=' + encodeURIComponent('https://raw.githubusercontent.com/BABYANYU/Surge/refs/heads/main/Codex.sgmodule')); cases++;
 const moduleText = fs.readFileSync(path.join(__dirname, '../Codex.sgmodule'), 'utf8');
-assert.match(moduleText, /#!arguments=AccessToken,AccountId,Policy:Proxy/);
-assert.match(moduleText, /refs\/heads\/main\/scripts\/codex-panel\.js/);
+assert.match(moduleText, /#!arguments=AccessToken,AccountId,Policy:AI/);
+assert.match(moduleText, /refs\/heads\/main\/Codex\/codex-panel\.js/);
 assert.ok(!/\beval\s*\(|new Function|console\.|\$persistentStore|ctx\.http/.test(source));
 
 const referenceTime = 1800000000000;
@@ -166,6 +167,6 @@ const samplePanel = ok.context.render({ queriedAt: referenceTime, windows: [
 assert.equal(samplePanel.content, '5 小时额度 · 剩余 58%\n1 小时 9 分钟后重置\n\n每周额度 · 剩余 24%\n5 天 3 小时后重置'); cases++;
 assert.match(moduleText, /update-interval=-1/);
 assert.match(moduleText, /icon=bolt.circle.fill,icon-color=#6699FF/);
-assert.ok(moduleText.includes('codex-panel.js?v='));
+assert.ok(moduleText.includes('Codex/codex-panel.js?v='));
 
 console.log(`PASS: ${cases} synthetic cases; no live credentials or network; exactly-once completion and safe output verified.`);

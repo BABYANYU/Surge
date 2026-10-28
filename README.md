@@ -5,7 +5,7 @@
 | **IPPure** | 查看出口 IP、ASN、运营商、位置、风险值与原生状态 | [添加](https://babyanyu.github.io/Surge/?m=ippure) | [查看](./IPPure.sgmodule) |
 | **Route** | 查看代理入口与落地 IP、运营商及位置 | [添加](https://babyanyu.github.io/Surge/?m=landing) | [查看](./Route.sgmodule) |
 | **HTTPS** | 5 轮 HTTPS 测试，比较节点综合延迟与抖动 | [添加](https://babyanyu.github.io/Surge/?m=latency) | [查看](./Latency.sgmodule) |
-| **Codex** | 查询Codex 5小时与周额度；[参数说明](./docs/codex.md) | [添加](https://babyanyu.github.io/Surge/?m=codex) | [查看](./Codex.sgmodule) |
+| **Codex** | 查询Codex 5小时与周额度；[参数说明](./docs/codex.md) · [参数工具](./Codex) | [添加](https://babyanyu.github.io/Surge/?m=codex) | [查看](./Codex/Codex.sgmodule) |
 | **Cron** | 定时切换指定策略组，附状态面板 | [添加](https://babyanyu.github.io/Surge/?m=cron) | [查看](./Cron.sgmodule) |
 | **YouTube Enhance** | 去广告、后台播放、画中画及播放体验增强 | [添加](https://babyanyu.github.io/Surge/?m=youtube) | [查看](./YouTube-Plus.sgmodule) |
 | **AQIYI Clean** | 爱奇艺广告与部分页面内容清理 | [添加](https://babyanyu.github.io/Surge/?m=iqiyi) | [查看](./iQiYi.sgmodule) |

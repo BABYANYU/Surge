@@ -1,6 +1,10 @@
 # Codex 额度面板（Surge iOS）
 
-[安装 Codex](https://babyanyu.github.io/Surge/?m=codex) · [模块源文件](../Codex.sgmodule) · [脚本](../scripts/codex-panel.js)
+[安装 Codex](https://babyanyu.github.io/Surge/?m=codex) · [模块源文件](../Codex.sgmodule) · [脚本](../Codex/codex-panel.js)
+
+## Windows 参数复制工具
+
+下载 [启动文件](../Codex/Open-Codex-Helper.cmd) 和 [PowerShell 脚本](../Codex/Copy-Codex-Parameters.ps1)，放在同一文件夹，双击启动文件。工具只读取本机已登录 Codex 的 `CODEX_HOME/auth.json` 或 `~/.codex/auth.json`，点击按钮复制 AccessToken 或 AccountId；不联网、不显示凭据、不保存副本。不能在 iPhone Surge 内执行这个 Windows 工具。不要把凭据、auth.json 或含参数的配置上传到 GitHub。
 
 ## 配置
 
@@ -10,13 +14,13 @@
 | --- | --- |
 | `AccessToken` | 短期 `access_token` 本身，不带 `Bearer `。不是 API key 或 refresh token。 |
 | `AccountId` | 与令牌匹配的 ChatGPT 账户/工作区 ID；不是用户 ID、邮箱或 API 组织密钥。 |
-| `Policy` | 已有的 Surge 策略或策略组名，默认为 `Proxy`；空值也回退到 `Proxy`。不自动创建或切换策略组。 |
+| `Policy` | 已有的 Surge 策略或策略组名，默认为 `AI`；空值也回退到 `AI`。不自动创建或切换策略组。 |
 
 安装启用后在策略选择页查看面板，点击卡片刷新查询最新额度。`update-interval=-1` 关闭面板自动刷新，不后台轮询，不需要 MITM。模块订阅 URL 与面板标识保持稳定；脚本发布时在内部 URL 附加基于脚本内容的版本参数，避免手机继续执行旧缓存，无需用户更换模块链接；沿用 IPPure、Route、HTTPS 的配置：`update-interval=-1`，`script-update-interval=1`。脚本更新间隔不代表每秒查询额度。更新模块获取新版配置；查询实时额度仍由面板刷新触发。
 
 ### 参数编码与保密
 
-Surge 的 `{{{参数}}}` 是**应用模块前原样替换配置文本**，官方没有承诺自动转义；它不是安全的 JSON 或 JavaScript 字符串插值。模块参数表本身使用 `#!arguments=AccessToken,AccountId,Policy:Proxy`，`argument` 内的 `key=value&...` 仅是本脚本自己的传参协议，不是 Surge 的模块参数表语法。
+Surge 的 `{{{参数}}}` 是**应用模块前原样替换配置文本**，官方没有承诺自动转义；它不是安全的 JSON 或 JavaScript 字符串插值。模块参数表本身使用 `#!arguments=AccessToken,AccountId,Policy:AI`，`argument` 内的 `key=value&...` 仅是本脚本自己的传参协议，不是 Surge 的模块参数表语法。
 
 - 标准 JWT（字母、数字、`-`、`_`、`.`）和常见账户 ID 可直接填写。
 - 值含其他字符时，先在本地用 `encodeURIComponent` 编码**单个值**，再填对应参数框；不要编码整个 `key=value&...` 字串，也不要发送凭据到在线编码网站。

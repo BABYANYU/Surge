@@ -2,7 +2,6 @@
 
 | 模块 | 功能 | 安装 | 源文件 |
 | :--- | :--- | :---: | :---: |
-| **丰巢广告实验** | 仅修改已捕获广告接口；开屏效果待实机验证 | [添加](https://babyanyu.github.io/Surge/?m=fengchao) | [查看](./Fengchao.sgmodule) |
 | **IPPure** | 查看出口 IP、ASN、运营商、位置、风险值与原生状态 | [添加](https://babyanyu.github.io/Surge/?m=ippure) | [查看](./IPPure.sgmodule) |
 | **Route** | 查看代理入口与落地 IP、运营商及位置 | [添加](https://babyanyu.github.io/Surge/?m=landing) | [查看](./Route.sgmodule) |
 | **HTTPS** | 5 轮 HTTPS 测试，比较节点综合延迟与抖动 | [添加](https://babyanyu.github.io/Surge/?m=latency) | [查看](./Latency.sgmodule) |

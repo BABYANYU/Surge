@@ -1,9 +1,0 @@
-#!name=微信广告视频拦截
-#!desc=拦截微信广告视频素材 ads_svp_video_*.mp4；用于丰巢开屏测试，可能同时影响其他微信广告视频，业务视频不受影响。
-#!system=ios
-
-[URL Rewrite]
-^https?://wxsmw\.wxs\.qq\.com/.*ads_svp_video_.*\.mp4.*$ _ reject
-
-[MITM]
-hostname = %APPEND% wxsmw.wxs.qq.com, wximg.wxs.qq.com

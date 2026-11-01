@@ -2,6 +2,7 @@
 
 | 模块 | 功能 | 安装 | 源文件 |
 | :--- | :--- | :---: | :---: |
+| **微信广告视频拦截** | 仅拦截 `ads_svp_video_*.mp4` 广告素材，可能影响其他微信广告视频 | [添加](https://babyanyu.github.io/Surge/?m=wxad) | [查看](./WeChat-AdVideo.sgmodule) |
 | **IPPure** | 查看出口 IP、ASN、运营商、位置、风险值与原生状态 | [添加](https://babyanyu.github.io/Surge/?m=ippure) | [查看](./IPPure.sgmodule) |
 | **Route** | 查看代理入口与落地 IP、运营商及位置 | [添加](https://babyanyu.github.io/Surge/?m=landing) | [查看](./Route.sgmodule) |
 | **HTTPS** | 5 轮 HTTPS 测试，比较节点综合延迟与抖动 | [添加](https://babyanyu.github.io/Surge/?m=latency) | [查看](./Latency.sgmodule) |

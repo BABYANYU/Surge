@@ -1,6 +1,0 @@
-#!name=微信广告抓取诊断
-#!desc=临时启用 wxsmw/wximg 的 MITM，用于定位丰巢开屏广告视频路径；不含广告拦截规则，诊断完成后可停用。
-#!system=ios
-
-[MITM]
-hostname = %APPEND% wxsmw.wxs.qq.com, wximg.wxs.qq.com

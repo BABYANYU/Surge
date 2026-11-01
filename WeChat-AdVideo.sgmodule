@@ -6,4 +6,4 @@
 ^https?://wxsmw\.wxs\.qq\.com/.*ads_svp_video_.*\.mp4.*$ _ reject
 
 [MITM]
-hostname = %APPEND% wxsmw.wxs.qq.com
+hostname = %APPEND% wxsmw.wxs.qq.com, wximg.wxs.qq.com

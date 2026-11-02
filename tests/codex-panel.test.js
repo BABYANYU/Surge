@@ -135,8 +135,8 @@ vm.runInNewContext(installHTML.match(/<script>([\s\S]*?)<\/script>/)[1], {
   URLSearchParams, location: { search: '?m=codex', replace(url) { redirected = url; } },
   document: { getElementById(id) { return elements[id] || (elements[id] = { style: {} }); } }
 });
-assert.equal(redirected, 'surge:///install-module?url=' + encodeURIComponent('https://raw.githubusercontent.com/BABYANYU/Surge/refs/heads/main/Codex.sgmodule')); cases++;
-const moduleText = fs.readFileSync(path.join(__dirname, '../Codex.sgmodule'), 'utf8');
+assert.equal(redirected, 'surge:///install-module?url=' + encodeURIComponent('https://raw.githubusercontent.com/BABYANYU/Surge/refs/heads/main/Codex/Codex.sgmodule')); cases++;
+const moduleText = fs.readFileSync(path.join(__dirname, '../Codex/Codex.sgmodule'), 'utf8');
 assert.match(moduleText, /#!arguments=AccessToken,AccountId,Policy:AI/);
 assert.match(moduleText, /refs\/heads\/main\/Codex\/codex-panel\.js/);
 assert.ok(!/\beval\s*\(|new Function|console\.|\$persistentStore|ctx\.http/.test(source));

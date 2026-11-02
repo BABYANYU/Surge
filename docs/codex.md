@@ -1,6 +1,6 @@
 # Codex 额度面板（Surge iOS）
 
-[安装 Codex](https://babyanyu.github.io/Surge/?m=codex) · [模块源文件](../Codex.sgmodule) · [脚本](../Codex/codex-panel.js)
+[安装 Codex](https://babyanyu.github.io/Surge/?m=codex) · [模块源文件](../Codex/Codex.sgmodule) · [脚本](../Codex/codex-panel.js)
 
 ## Windows 参数复制工具
 

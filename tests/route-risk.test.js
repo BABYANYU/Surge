@@ -12,21 +12,21 @@ async function run(risk,opts={}){
  }}};
  vm.runInNewContext(code,context,{timeout:1000});
  for(let i=0;i<10&&!out;i++)await new Promise(r=>setImmediate(r));
- assert.equal(calls,1);assert(out.content.includes('入口 IP：203.0.113.9'));assert(out.content.includes('落地 IP：'+ip));
+ assert.equal(calls,1);assert(out.content.includes('入口\n203.0.113.9'));assert(out.content.includes('落地\n'+ip));
  assert.equal(requests.filter(o=>o.url.includes('my.ippure.com')).length,1);
  assert.equal(requests.find(o=>o.url.includes('my.ippure.com')).policy,'TestNode');
- return out.content.split('\n').slice(-2);
+ return out.content.split('\n').slice(-1);
 }
 (async()=>{
  let n=0;async function t(data,expected,opts){assert.deepEqual(await run(data,opts),expected);n++;}
- await t({ip:'198.51.100.8',fraudScore:27.8,isBroadcast:false},['风险：28','原生：是']);
- await t({ip:'198.51.100.8',fraudScore:0,isBroadcast:true},['风险：0','原生：否']);
- await t({ip:'198.51.100.8',fraudScore:null},['风险：未知','原生：未知']);
- await t({ip:'198.51.100.8',fraudScore:'48'},['风险：48','原生：未知']);
- await t({ip:'198.51.100.8',fraudScore:999,isBroadcast:false},['风险：100','原生：是']);
- await t({ip:'198.51.100.99',fraudScore:1,isBroadcast:false},['风险：未知','原生：未知']);
- await t('{',['风险：未知','原生：未知']);
- await t({},['风险：未知','原生：未知'],{error:true});
- await t({},['风险：未知','原生：未知'],{status:429});
+ await t({ip:'198.51.100.8',fraudScore:27.8,isBroadcast:false},['风险 28 · 原生 是']);
+ await t({ip:'198.51.100.8',fraudScore:0,isBroadcast:true},['风险 0 · 原生 否']);
+ await t({ip:'198.51.100.8',fraudScore:null},['风险 未知 · 原生 未知']);
+ await t({ip:'198.51.100.8',fraudScore:'48'},['风险 48 · 原生 未知']);
+ await t({ip:'198.51.100.8',fraudScore:999,isBroadcast:false},['风险 100 · 原生 是']);
+ await t({ip:'198.51.100.99',fraudScore:1,isBroadcast:false},['风险 未知 · 原生 未知']);
+ await t('{',['风险 未知 · 原生 未知']);
+ await t({},['风险 未知 · 原生 未知'],{error:true});
+ await t({},['风险 未知 · 原生 未知'],{status:429});
  console.log('PASS',n,'Route integration cases; no live credentials/network');
 })().catch(e=>{console.error(e);process.exitCode=1;});

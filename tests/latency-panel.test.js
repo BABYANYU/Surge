@@ -18,10 +18,10 @@ function run(options={}){
  vm.runInNewContext(source,c,{timeout:1000});
  return {done,tests,store,writes,cleared,timer};
 }
-check('one discarded warm-up and five formal rounds',()=>{let r=run();assert.equal(r.tests,6);assert.equal(r.done.length,1);assert(r.done[0].content.includes('102 ms · 1 ms A'));assert(!r.done[0].content.includes('9999'));assert.equal(r.done[0].title,'HTTPS');assert(r.cleared);assert.equal(r.store['latency-panel-lock:Proxy'],'');});
+check('one discarded warm-up and five formal rounds',()=>{let r=run();assert.equal(r.tests,6);assert.equal(r.done.length,1);assert(r.done[0].content.includes('A · 102 ms · 1 ms'));assert(!r.done[0].content.includes('9999'));assert.equal(r.done[0].title,'HTTPS');assert(r.cleared);assert.equal(r.store['latency-panel-lock:Proxy'],'');});
 check('zero/failed samples excluded and count disclosed',()=>{let r=run({a:[9999,0,null,102,104,106]});assert(r.done[0].content.includes('成功 3/5 轮'));assert(r.done[0].content.includes('104 ms'));});
-check('large valid samples retained and disclosed',()=>{let r=run({a:[99,100,101,102,103,1200]});assert(r.done[0].content.includes('102 ms · 1 ms A'));assert(r.done[0].content.includes('最高 1200 ms'));});
-check('all failures shown, not slow scores',()=>{let r=run({a:[null,null,null,null,null,null]});assert(r.done[0].content.includes('失败 A'));assert(r.done[0].content.includes('成功 0/5 轮'));});
+check('large valid samples retained and disclosed',()=>{let r=run({a:[99,100,101,102,103,1200]});assert(r.done[0].content.includes('A · 102 ms · 1 ms'));assert(r.done[0].content.includes('最高 1200 ms'));});
+check('all failures shown, not slow scores',()=>{let r=run({a:[null,null,null,null,null,null]});assert(r.done[0].content.includes('A · 失败'));assert(r.done[0].content.includes('成功 0/5 轮'));});
 check('busy run does not launch more network requests',()=>{let lock=Date.now()+':existing';let r=run({store:{'latency-panel-lock:Proxy':lock}});assert.equal(r.tests,0);assert.equal(r.done.length,1);assert.equal(r.store['latency-panel-lock:Proxy'],lock);});
 check('stale lock expires',()=>assert.equal(run({store:{'latency-panel-lock:Proxy':(Date.now()-80000)+':old'}}).tests,6));
 check('unknown group fails once and releases lock',()=>{let r=run({group:{}});assert.equal(r.done.length,1);assert.equal(r.tests,0);assert.equal(r.store['latency-panel-lock:Proxy'],'');});

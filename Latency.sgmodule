@@ -1,5 +1,5 @@
 #!name=HTTPS
-#!desc=通过节点完成 5 轮 HTTPS HEAD 请求，综合延迟取 Surge 返回的端到端总耗时中位数，抖动取 MAD。
+#!desc=点击后预热 1 轮并丢弃，再正式测试 5 轮 HTTPS；综合延迟取中位数，抖动取 MAD，提示失败样本和秒级高值。
 #!system=ios
 #!arguments=Group:Proxy
 #!arguments-desc=填写需要检测的策略组名称，名称必须与 Surge 完全一致。

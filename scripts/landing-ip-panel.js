@@ -29,19 +29,19 @@ async function main() {
 
   if (hasDistinctEntrance) {
     lines.push(
-      `入口 IP：${entranceIP}`,
-      `运营商：${formatOperator(entrance.operator)}`,
-      `位置：${formatLocation(entrance)}`,
+      "入口",
+      entranceIP,
+      detailLine(entrance.operator, entrance),
       ""
     );
   }
 
   lines.push(
-    `落地 IP：${landing.ip}`,
-    `运营商：${formatOperator(landing.operator)}`,
-    `位置：${formatLocation(landing)}`,
-    `风险：${risk.score === null ? "未知" : risk.score}`,
-    `原生：${risk.native}`
+    "落地",
+    landing.ip,
+    detailLine(landing.operator, landing),
+    "",
+    `风险 ${risk.score === null ? "未知" : risk.score} · 原生 ${risk.native}`
   );
 
   $done({
@@ -214,6 +214,12 @@ function sameIP(left, right) {
 
 function normalizeIP(value) {
   return clean(value).replace(/^\[|\]$/g, "").toLowerCase();
+}
+
+function detailLine(operator, info) {
+  const values = [formatOperator(operator), formatLocation(info)]
+    .filter((value) => value && value !== "未知");
+  return values.join(" · ") || "未知";
 }
 
 function formatLocation(info) {

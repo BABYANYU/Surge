@@ -18,10 +18,12 @@ async function main() {
   const hasDistinctEntrance = entranceIP && !sameIP(entranceIP, landing.ip);
 
   let entrance = {};
+  const riskPromise = lookupRisk(landing.ip, clean(request && request.policyName));
 
   if (hasDistinctEntrance) {
     entrance = await lookupEntrance(entranceIP).catch(() => ({}));
   }
+  const risk = await riskPromise;
 
   const lines = [];
 
@@ -37,7 +39,9 @@ async function main() {
   lines.push(
     `落地 IP：${landing.ip}`,
     `运营商：${formatOperator(landing.operator)}`,
-    `位置：${formatLocation(landing)}`
+    `位置：${formatLocation(landing)}`,
+    `风险：${risk.score === null ? "未知" : risk.score}`,
+    `原生：${risk.native}`
   );
 
   $done({
@@ -45,6 +49,43 @@ async function main() {
     content: lines.join("\n"),
     icon: PANEL.icon,
     "icon-color": PANEL.color,
+  });
+}
+
+function lookupRisk(landingIP, policy) {
+  return new Promise((resolve) => {
+    let settled = false;
+    let timer;
+    const unknown = { score: null, native: "未知" };
+    function finish(value) {
+      if (settled) return;
+      settled = true;
+      if (timer) clearTimeout(timer);
+      resolve(value);
+    }
+    timer = setTimeout(() => finish(unknown), 4500);
+    const options = {
+      url: "https://my.ippure.com/v1/info",
+      timeout: 4,
+      headers: { Accept: "application/json", "User-Agent": "Surge Route Panel/1.1" },
+    };
+    if (policy) options.policy = policy;
+    try {
+      $httpClient.get(options, (error, response, body) => {
+        if (settled) return;
+        const status = Number(response && (response.status || response.statusCode));
+        if (error || (status && (status < 200 || status >= 300))) return finish(unknown);
+        try {
+          const data = JSON.parse(body);
+          if (!data || !data.ip || !sameIP(data.ip, landingIP)) return finish(unknown);
+          const raw = data.fraudScore;
+          const number = raw === null || raw === undefined || raw === "" || typeof raw === "boolean"
+            ? NaN : Number(raw);
+          const score = Number.isFinite(number) ? Math.max(0, Math.min(100, Math.round(number))) : null;
+          finish({ score, native: data.isBroadcast === true ? "否" : data.isBroadcast === false ? "是" : "未知" });
+        } catch (_) { finish(unknown); }
+      });
+    } catch (_) { finish(unknown); }
   });
 }
 

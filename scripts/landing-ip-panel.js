@@ -53,6 +53,52 @@ async function main() {
 }
 
 function lookupRisk(landingIP, policy) {
+  if (isIPv6(landingIP)) return lookupScamalytics(landingIP, policy, "—");
+  return lookupIpPure(landingIP, policy);
+}
+
+function lookupScamalytics(ip, policy, nativeFallback) {
+  return new Promise((resolve) => {
+    let settled = false;
+    let timer;
+    const unknown = { score: null, native: nativeFallback };
+    function finish(value) {
+      if (settled) return;
+      settled = true;
+      if (timer) clearTimeout(timer);
+      resolve(value);
+    }
+    timer = setTimeout(() => finish(unknown), 4500);
+    const options = {
+      url: `https://scamalytics.com/ip/${clean(ip)}`,
+      timeout: 4,
+      headers: {
+        Accept: "text/html",
+        "User-Agent":
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+      },
+    };
+    if (policy) options.policy = policy;
+    try {
+      $httpClient.get(options, (error, response, body) => {
+        if (settled) return;
+        const status = Number(response && (response.status || response.statusCode));
+        if (error || (status && (status < 200 || status >= 300)) || typeof body !== "string") {
+          return finish(unknown);
+        }
+        const match = body.match(/"score"\s*:\s*"?(\d{1,3})/) || body.match(/Fraud Score:\s*(\d{1,3})/);
+        if (!match) return finish(unknown);
+        const value = Number(match[1]);
+        finish({
+          score: Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : null,
+          native: nativeFallback,
+        });
+      });
+    } catch (_) { finish(unknown); }
+  });
+}
+
+function lookupIpPure(landingIP, policy) {
   return new Promise((resolve) => {
     let settled = false;
     let timer;
@@ -212,8 +258,21 @@ function sameIP(left, right) {
   return normalizeIP(left) === normalizeIP(right);
 }
 
+function isIPv6(value) {
+  const text = clean(value).replace(/^\[|\]$/g, "");
+  return text.includes(":") && !/^\d{1,3}(?:\.\d{1,3}){3}$/.test(text);
+}
+
 function normalizeIP(value) {
-  return clean(value).replace(/^\[|\]$/g, "").toLowerCase();
+  const text = clean(value).replace(/^\[|\]$/g, "").toLowerCase().split("%")[0];
+  if (!text.includes(":")) return text;
+  const parts = text.split("::");
+  const left = parts[0] ? parts[0].split(":") : [];
+  const right = parts.length > 1 && parts[1] ? parts[1].split(":") : [];
+  const groups = parts.length > 1
+    ? left.concat(new Array(Math.max(8 - left.length - right.length, 0)).fill("0"), right)
+    : left;
+  return groups.map((group) => group.replace(/^0+(?=.)/, "")).join(":");
 }
 
 function formatLocation(info) {

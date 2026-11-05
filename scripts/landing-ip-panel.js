@@ -36,13 +36,14 @@ async function main() {
     );
   }
 
-  lines.push(
+  const landingLines = [
     `落地 IP：${landing.ip}`,
     `运营商：${formatOperator(landing.operator)}`,
     `位置：${formatLocation(landing)}`,
     `风险：${risk.score === null ? "未知" : risk.score}`,
-    `原生：${risk.native}`
-  );
+  ];
+  if (!isIPv6(landing.ip)) landingLines.push(`原生：${risk.native}`);
+  lines.push(...landingLines);
 
   $done({
     title: `Route：${fitText(policy, 24)}`,
@@ -58,18 +59,7 @@ function lookupRisk(landingIP, policy) {
 }
 
 async function lookupIpv6Risk(ip, policy) {
-  const [info, rdap, page] = await Promise.all([
-    httpGet("https://my.ippure.com/v1/info", policy, "application/json"),
-    httpGet(`https://rdap.org/ip/${ip}`, policy, "application/rdap+json, application/json"),
-    httpGet(`https://scamalytics.com/ip/${ip}`, policy, "text/html"),
-  ]);
-  let organization = "";
-  try {
-    const data = JSON.parse(info);
-    if (data && data.ip && sameIP(data.ip, ip)) organization = clean(data.asOrganization);
-  } catch (_) {}
-  let registrant = "";
-  try { registrant = rdapRegistrant(JSON.parse(rdap)); } catch (_) {}
+  const page = await httpGet(`https://scamalytics.com/ip/${ip}`, policy, "text/html");
   let score = null;
   const match = typeof page === "string"
     ? page.match(/"score"\s*:\s*"?(\d{1,3})/) || page.match(/Fraud Score:\s*(\d{1,3})/)
@@ -78,7 +68,7 @@ async function lookupIpv6Risk(ip, policy) {
     const value = Number(match[1]);
     if (Number.isFinite(value)) score = Math.max(0, Math.min(100, value));
   }
-  return { score, native: compareOrganization(organization, registrant) };
+  return { score };
 }
 
 function httpGet(url, policy, accept) {
@@ -101,36 +91,6 @@ function httpGet(url, policy, accept) {
       });
     } catch (_) { finish(null); }
   });
-}
-
-function rdapRegistrant(data) {
-  const entities = data && Array.isArray(data.entities) ? data.entities : [];
-  for (const entity of entities) {
-    const vcard = entity && entity.vcardArray;
-    if (!Array.isArray(vcard) || !Array.isArray(vcard[1])) continue;
-    for (const item of vcard[1]) {
-      if (Array.isArray(item) && item[0] === "fn" && typeof item[3] === "string" && item[3].trim()) {
-        return item[3].trim();
-      }
-    }
-  }
-  const first = entities[0];
-  return first && typeof first.handle === "string" ? first.handle : "";
-}
-
-function orgKey(value) {
-  return clean(value)
-    .toLowerCase()
-    .replace(/\b(llc|l\.l\.c|inc|ltd|limited|corp|corporation|company|gmbh|kk)\b/g, "")
-    .replace(/[^a-z0-9]/g, "");
-}
-
-function compareOrganization(organization, registrant) {
-  const left = orgKey(organization);
-  const right = orgKey(registrant);
-  if (!left || !right) return "未知";
-  if (left === right || left.includes(right) || right.includes(left)) return "是";
-  return "否";
 }
 
 function isIPv6(value) {

@@ -18,7 +18,10 @@ async function main() {
   const hasDistinctEntrance = entranceIP && !sameIP(entranceIP, landing.ip);
 
   let entrance = {};
-  const riskPromise = lookupRisk(landing.ip, clean(request && request.policyName));
+  const ipv6Landing = isIPv6(landing.ip);
+  const riskPromise = ipv6Landing
+    ? Promise.resolve({ score: null, native: "未知" })
+    : lookupRisk(landing.ip, clean(request && request.policyName));
 
   if (hasDistinctEntrance) {
     entrance = await lookupEntrance(entranceIP).catch(() => ({}));
@@ -40,9 +43,13 @@ async function main() {
     `落地 IP：${landing.ip}`,
     `运营商：${formatOperator(landing.operator)}`,
     `位置：${formatLocation(landing)}`,
-    `风险：${risk.score === null ? "未知" : risk.score}`,
   ];
-  if (!isIPv6(landing.ip)) landingLines.push(`原生：${risk.native}`);
+  if (!ipv6Landing) {
+    landingLines.push(
+      `风险：${risk.score === null ? "未知" : risk.score}`,
+      `原生：${risk.native}`
+    );
+  }
   lines.push(...landingLines);
 
   $done({
@@ -54,43 +61,7 @@ async function main() {
 }
 
 function lookupRisk(landingIP, policy) {
-  if (isIPv6(landingIP)) return lookupIpv6Risk(landingIP, policy);
   return lookupIpPure(landingIP, policy);
-}
-
-async function lookupIpv6Risk(ip, policy) {
-  const page = await httpGet(`https://scamalytics.com/ip/${ip}`, policy, "text/html");
-  let score = null;
-  const match = typeof page === "string"
-    ? page.match(/"score"\s*:\s*"?(\d{1,3})/) || page.match(/Fraud Score:\s*(\d{1,3})/)
-    : null;
-  if (match) {
-    const value = Number(match[1]);
-    if (Number.isFinite(value)) score = Math.max(0, Math.min(100, value));
-  }
-  return { score };
-}
-
-function httpGet(url, policy, accept) {
-  return new Promise((resolve) => {
-    let settled = false;
-    const timer = setTimeout(() => finish(null), 4000);
-    function finish(value) {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      resolve(value);
-    }
-    const options = { url, timeout: 4, headers: { Accept: accept, "User-Agent": "Surge Route Panel/1.2" } };
-    if (policy) options.policy = policy;
-    try {
-      $httpClient.get(options, (error, response, body) => {
-        const status = Number(response && (response.status || response.statusCode));
-        if (error || (status && (status < 200 || status >= 300)) || typeof body !== "string") return finish(null);
-        finish(body);
-      });
-    } catch (_) { finish(null); }
-  });
 }
 
 function isIPv6(value) {

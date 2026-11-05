@@ -53,6 +53,92 @@ async function main() {
 }
 
 function lookupRisk(landingIP, policy) {
+  if (isIPv6(landingIP)) return lookupIpv6Risk(landingIP, policy);
+  return lookupIpPure(landingIP, policy);
+}
+
+async function lookupIpv6Risk(ip, policy) {
+  const [info, rdap, page] = await Promise.all([
+    httpGet("https://my.ippure.com/v1/info", policy, "application/json"),
+    httpGet(`https://rdap.org/ip/${ip}`, policy, "application/rdap+json, application/json"),
+    httpGet(`https://scamalytics.com/ip/${ip}`, policy, "text/html"),
+  ]);
+  let organization = "";
+  try {
+    const data = JSON.parse(info);
+    if (data && data.ip && sameIP(data.ip, ip)) organization = clean(data.asOrganization);
+  } catch (_) {}
+  let registrant = "";
+  try { registrant = rdapRegistrant(JSON.parse(rdap)); } catch (_) {}
+  let score = null;
+  const match = typeof page === "string"
+    ? page.match(/"score"\s*:\s*"?(\d{1,3})/) || page.match(/Fraud Score:\s*(\d{1,3})/)
+    : null;
+  if (match) {
+    const value = Number(match[1]);
+    if (Number.isFinite(value)) score = Math.max(0, Math.min(100, value));
+  }
+  return { score, native: compareOrganization(organization, registrant) };
+}
+
+function httpGet(url, policy, accept) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const timer = setTimeout(() => finish(null), 4000);
+    function finish(value) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(value);
+    }
+    const options = { url, timeout: 4, headers: { Accept: accept, "User-Agent": "Surge Route Panel/1.2" } };
+    if (policy) options.policy = policy;
+    try {
+      $httpClient.get(options, (error, response, body) => {
+        const status = Number(response && (response.status || response.statusCode));
+        if (error || (status && (status < 200 || status >= 300)) || typeof body !== "string") return finish(null);
+        finish(body);
+      });
+    } catch (_) { finish(null); }
+  });
+}
+
+function rdapRegistrant(data) {
+  const entities = data && Array.isArray(data.entities) ? data.entities : [];
+  for (const entity of entities) {
+    const vcard = entity && entity.vcardArray;
+    if (!Array.isArray(vcard) || !Array.isArray(vcard[1])) continue;
+    for (const item of vcard[1]) {
+      if (Array.isArray(item) && item[0] === "fn" && typeof item[3] === "string" && item[3].trim()) {
+        return item[3].trim();
+      }
+    }
+  }
+  const first = entities[0];
+  return first && typeof first.handle === "string" ? first.handle : "";
+}
+
+function orgKey(value) {
+  return clean(value)
+    .toLowerCase()
+    .replace(/\b(llc|l\.l\.c|inc|ltd|limited|corp|corporation|company|gmbh|kk)\b/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function compareOrganization(organization, registrant) {
+  const left = orgKey(organization);
+  const right = orgKey(registrant);
+  if (!left || !right) return "未知";
+  if (left === right || left.includes(right) || right.includes(left)) return "是";
+  return "否";
+}
+
+function isIPv6(value) {
+  const text = clean(value).replace(/^\[|\]$/g, "");
+  return text.includes(":") && !/^\d{1,3}(?:\.\d{1,3}){3}$/.test(text);
+}
+
+function lookupIpPure(landingIP, policy) {
   return new Promise((resolve) => {
     let settled = false;
     let timer;

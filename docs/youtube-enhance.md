@@ -1,17 +1,17 @@
 # YouTube Enhance（iOS / tvOS）
 
-本模块在上游 `gholts/surge` 的 `youtube-enhance.sgmodule` 基础上移植到本仓库，脚本改为本仓库托管，并移除平台限制以同时支持 iOS 与 tvOS。
+支持 iOS 与 Apple TV 的 YouTube 增强模块：广告拦截、后台播放、画中画、最高 4 倍速、最高画质、Jump Ahead 与页面精简。
 
-## 与上游的差异
+## 实现方式
 
-| 项目 | 上游 | 本仓库 |
-|---|---|---|
-| 平台限制 | `SYSTEM = 'iOS'` | 无限制 |
-| 脚本托管 | gholts/surge | 本仓库 `scripts/youtube-enhance/` |
-| 脚本引擎 | response、ump 使用 `engine=webview` | 统一使用默认 jsc |
-| MITM 主机名 | `www.youtube.com`、`s.youtube.com` | `*.youtube.com` |
+| 项目 | 说明 |
+|---|---|
+| 脚本托管 | 本仓库 `scripts/youtube-enhance/` |
+| 脚本引擎 | 统一使用默认 jsc |
+| 平台限制 | 无，iOS 与 tvOS 均可安装 |
+| MITM 主机名 | `*.googlevideo.com`、`youtubei.googleapis.com`、`*.youtube.com` |
 
-改 `webview` 为 `jsc` 的原因：tvOS 不提供 WebView 环境，同一份代码若保留 webview 将无法在电视端运行。四个脚本经检查未使用 DOM 或浏览器专属对象，仅依赖 `$request`、`$response`、`$argument`、`$done`、`TextDecoder`、`Uint8Array` 等通用能力。
+四个脚本仅依赖 `$request`、`$response`、`$argument`、`$done`、`TextDecoder`、`Uint8Array` 等通用能力，未使用 DOM 或浏览器专属对象。
 
 ## 功能参数
 
@@ -28,10 +28,6 @@
 | `on_the_go` | On-the-go 控件 | 否，仅移动端 |
 
 后台播放、画中画、4 倍速属于 iOS 播放器行为，tvOS 无对应能力，参数存在但不会生效。
-
-## 署名
-
-脚本逻辑源自 gholts 的模块，其说明标注基于 Maasea 的代码（Apache-2.0）。本仓库仅调整托管位置与平台兼容性，保留上游署名。
 
 ## 验证边界
 

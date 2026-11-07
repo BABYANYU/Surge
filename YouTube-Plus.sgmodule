@@ -1,6 +1,5 @@
 #!name=YouTube Enhance
 #!desc=移除广告，启用后台播放、画中画与最高 4 倍速；支持最高画质、Jump Ahead、内容精简。兼容 iOS 与 tvOS。
-#!author=gholts
 #!arguments=block_upload:true,block_shorts:false,auto_hd:true,block_games:true,block_vertical_live:false,jump_ahead:true,block_store:true,block_ai:true,on_the_go:true
 #!arguments-desc=block_upload\n  └ 隐藏“上传”入口\nblock_shorts\n  └ 隐藏 Shorts 入口\nauto_hd\n  └ 优先最高可用画质\nblock_games\n  └ 隐藏 Playables\nblock_vertical_live\n  └ 隐藏竖屏直播推荐\njump_ahead\n  └ 启用“跳过精彩片段”\nblock_store\n  └ 隐藏创作者商店与商品卡片\nblock_ai\n  └ 移除 Ask、AI 摘要等入口\non_the_go\n  └ 启用 On-the-go 控件（仅移动端有效）
 

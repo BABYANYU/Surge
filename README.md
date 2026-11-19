@@ -15,7 +15,7 @@
 | **IPPure** | 查看出口 IP、ASN、运营商、位置、风险值与原生状态 | [添加](https://babyanyu.github.io/Surge/?m=ippure) | [IPPure.sgmodule](./IPPure.sgmodule) |
 | **Route** | 查看代理入口与落地信息，附 IP 风险与原生状态 | [添加](https://babyanyu.github.io/Surge/?m=landing) | [Route.sgmodule](./Route.sgmodule) |
 | **HTTPS** | 点击预热 1 轮＋正式 5 轮，比较综合延迟与 MAD 抖动，提示失败及秒级高值 | [添加](https://babyanyu.github.io/Surge/?m=latency) | [Latency.sgmodule](./Latency.sgmodule) |
-| **Codex** | 查询 Codex 5 小时与周额度；[参数与使用说明](./docs/codex.md) · [Codex 工具指南](./Codex/README.md) · [参数工具文件](./Codex) | [添加](https://babyanyu.github.io/Surge/?m=codex) | [Codex.sgmodule](./Codex/Codex.sgmodule) |
+| **Codex** | 查询 Codex 5 小时与周额度；[参数与使用说明](./docs/codex.md) · [Codex 工具指南](./Codex/README.md) · [Windows 参数工具](./Codex) | [添加](https://babyanyu.github.io/Surge/?m=codex) | [Codex.sgmodule](./Codex/Codex.sgmodule) |
 | **Cron** | 定时切换指定策略组，附状态面板 | [添加](https://babyanyu.github.io/Surge/?m=cron) | [Cron.sgmodule](./Cron.sgmodule) |
 | **YouTube Enhance** | 去广告、后台播放、画中画及播放体验增强 | [添加](https://babyanyu.github.io/Surge/?m=youtube) | [YouTube-Plus.sgmodule](./YouTube-Plus.sgmodule) |
 | **AQIYI Clean** | 爱奇艺广告与部分页面内容清理 | [添加](https://babyanyu.github.io/Surge/?m=iqiyi) | [iQiYi.sgmodule](./iQiYi.sgmodule) |
